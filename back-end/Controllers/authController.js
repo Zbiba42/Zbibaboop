@@ -150,4 +150,4 @@ const authToken = (req, res, next) => {
   })
 }
 
-module.exports = { signUp, logIn, LogOut, RefreshTokens }
+module.exports = { signUp, logIn, LogOut, RefreshTokens, authToken }
