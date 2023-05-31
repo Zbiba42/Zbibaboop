@@ -5,8 +5,8 @@ import { SinupForm } from '../components/SinupForm'
 export const Login = () => {
   const [form, setForm] = useState('login')
   return (
-    <div className="flex flex-wrap">
-      <div className="mr-auto mt-10">
+    <div className="flex justify-items-center flex-wrap">
+      <div className="m-auto mt-10">
         <img src={Logo} alt="logo" />
       </div>
       {form == 'login' ? (
