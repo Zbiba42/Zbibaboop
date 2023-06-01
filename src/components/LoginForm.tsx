@@ -24,8 +24,8 @@ export const LoginForm = ({ setForm }: LoginProps) => {
       )
       if (response.status == 200) {
         toast.success('You are suscesfully logged in')
-        sessionStorage.setItem('accesToken', response.data.accesToken)
-        sessionStorage.setItem('refreshToken', response.data.refreshToken)
+        sessionStorage.setItem('AccessToken', response.data.accesToken)
+        sessionStorage.setItem('RefreshToken', response.data.refreshToken)
       }
     } catch (error: any) {
       toast.error(error.message)
