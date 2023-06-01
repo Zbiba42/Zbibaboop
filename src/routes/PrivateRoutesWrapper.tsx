@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
-export const PrivateRoutes = () => {
+export const PrivateRoutesWrapper = () => {
   const token = sessionStorage.getItem('AccessToken')
   const isAuthenticated = token && !isTokenExpired(token)
   interface Token {
@@ -11,5 +11,12 @@ export const PrivateRoutes = () => {
     const currentTime = Date.now() / 1000
     return decodedToken.exp < currentTime
   }
-  return isAuthenticated ? <Outlet /> : <Navigate to="/" />
+  return isAuthenticated ? (
+    <>
+      <div>test</div>
+      <Outlet />
+    </>
+  ) : (
+    <Navigate to="/" />
+  )
 }

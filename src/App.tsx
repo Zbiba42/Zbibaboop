@@ -1,11 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Login } from './pages/Login'
 import axios from 'axios'
 import './App.css'
-import { Home } from './pages/Home'
-import { PrivateRoutes } from './components/PrivateRoutes'
+import { AppRoutes } from './routes/AppRoutes'
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -58,14 +55,8 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      <BrowserRouter>
-        <Routes>
-          <Route index path="/" element={<Login />} />
-          <Route element={<PrivateRoutes />}>
-            <Route path="/home" element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+
+      <AppRoutes />
     </>
   )
 }
