@@ -5,7 +5,7 @@ import { Login } from './pages/Login'
 import axios from 'axios'
 import './App.css'
 import { Home } from './pages/Home'
-import { PrivateRoutes } from './components/PrivateRoute'
+import { PrivateRoutes } from './components/PrivateRoutes'
 
 function App() {
   axios.interceptors.request.use((config) => {
