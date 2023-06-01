@@ -2,13 +2,14 @@ import { useRef } from 'react'
 import { Box, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 interface LoginProps {
   setForm: (arg: string) => void
 }
 export const LoginForm = ({ setForm }: LoginProps) => {
   const emailRef = useRef<HTMLInputElement | null>(null)
   const passwordRef = useRef<HTMLInputElement | null>(null)
-
+  const navigate = useNavigate()
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const email = emailRef.current?.value
@@ -24,8 +25,9 @@ export const LoginForm = ({ setForm }: LoginProps) => {
       )
       if (response.status == 200) {
         toast.success('You are suscesfully logged in')
-        sessionStorage.setItem('AccessToken', response.data.accesToken)
-        sessionStorage.setItem('RefreshToken', response.data.refreshToken)
+        sessionStorage.setItem('AccessToken', response.data.data.accesToken)
+        sessionStorage.setItem('RefreshToken', response.data.data.refreshToken)
+        navigate('/home')
       }
     } catch (error: any) {
       toast.error(error.message)
