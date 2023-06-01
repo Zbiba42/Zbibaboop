@@ -4,6 +4,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Login } from './pages/Login'
 import axios from 'axios'
 import './App.css'
+import { Home } from './pages/Home'
+import { PrivateRoutes } from './components/PrivateRoute'
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -58,7 +60,10 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route index path="/" element={<Login />} />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </>
