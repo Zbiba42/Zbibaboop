@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
+import { NavBar } from '../components/NavBar'
 export const PrivateRoutesWrapper = () => {
   const token = sessionStorage.getItem('AccessToken')
   const isAuthenticated = token && !isTokenExpired(token)
@@ -13,7 +14,7 @@ export const PrivateRoutesWrapper = () => {
   }
   return isAuthenticated ? (
     <>
-      <div>test</div>
+      <NavBar />
       <Outlet />
     </>
   ) : (
