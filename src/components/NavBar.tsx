@@ -4,8 +4,10 @@ import { NavBox } from '../styles/navStyle'
 import { Link } from 'react-router-dom'
 import Badge, { BadgeProps } from '@mui/material/Badge'
 import { styled } from '@mui/material/styles'
-
+import { useContext } from 'react'
+import { HandleProfileClickContext } from '../routes/AppRoutes'
 export const NavBar = () => {
+  const animateContext = useContext(HandleProfileClickContext)
   const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
       right: -7,
@@ -47,9 +49,8 @@ export const NavBar = () => {
       </Box>
 
       <Box
-        sx={{ width: '33%', paddingTop: 0.5 }}
-        component={Link}
-        to={'/Profile'}
+        sx={{ width: '33%', paddingTop: 0.5, cursor: 'pointer' }}
+        onClick={() => animateContext?.setAnimate('open')}
       >
         <img
           className=" rounded-full  w-9 m-auto object-cover"
