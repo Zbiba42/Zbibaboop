@@ -1,42 +1,56 @@
 import { Box } from '@mui/material'
 import profile from '../assets/NoProfile.png'
+import { NavBox } from '../styles/navStyle'
+import { Link } from 'react-router-dom'
+import Badge, { BadgeProps } from '@mui/material/Badge'
+import { styled } from '@mui/material/styles'
+
 export const NavBar = () => {
+  const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      right: -7,
+      top: 13,
+      border: `2.5px solid ${theme.palette.background.paper}`,
+      padding: '0 4px',
+    },
+  }))
   return (
-    <Box
-      sx={{
-        width: window.innerWidth * 0.23,
-        height: 65,
-        borderRadius: '5px',
-        boxShadow: 2,
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyItems: 'center',
-        justifyContent: 'center',
-        float: 'right',
-      }}
-    >
+    <Box sx={NavBox}>
       <Box
         sx={{
           borderRight: `${1}px solid #D3D3D3`,
           width: '33%',
           paddingTop: 0.5,
         }}
+        component={Link}
+        to={'/'}
       >
-        <i className="fa-regular fa-message text-xl m-1"></i>
-        <h4>Notifications</h4>
+        <StyledBadge badgeContent={1} color="info">
+          <i className="fa-regular fa-message text-xl m-1"></i>
+        </StyledBadge>
+        <h4>Messages</h4>
       </Box>
+
       <Box
         sx={{
           borderRight: `${1}px solid #D3D3D3`,
           width: '33%',
           paddingTop: 0.5,
         }}
+        component={Link}
+        to={'/'}
       >
-        <i className="fa-regular fa-bell text-xl m-1"></i>
+        <StyledBadge badgeContent={0} color="info">
+          <i className="fa-regular fa-bell text-xl m-1"></i>
+        </StyledBadge>
         <h4>Notifications</h4>
       </Box>
 
-      <Box sx={{ width: '33%', paddingTop: 0.5 }}>
+      <Box
+        sx={{ width: '33%', paddingTop: 0.5 }}
+        component={Link}
+        to={'/Profile'}
+      >
         <img
           className=" rounded-full  w-9 m-auto object-cover"
           src={profile}
