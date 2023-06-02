@@ -4,6 +4,8 @@ export const SideBarBox: object = {
   minWidth: '82px',
   borderRight: `${1}px solid #D3D3D3`,
   position: 'fixed',
+  zIndex: 1,
+  backgroundColor: 'white',
 }
 
 export const HomeButton: object = {
