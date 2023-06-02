@@ -1,5 +1,9 @@
 export const NavBox: object = {
   width: window.innerWidth * 0.23,
+  minWidth: '315px',
+  position: 'fixed',
+  right: '1.5rem',
+  top: '1.5rem',
   height: 65,
   borderRadius: '5px',
   boxShadow: 2,
