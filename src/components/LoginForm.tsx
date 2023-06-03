@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography } from '@mui/material'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { serverUrl } from '../config'
 interface LoginProps {
   setForm: (arg: string) => void
 }
@@ -19,10 +20,7 @@ export const LoginForm = ({ setForm }: LoginProps) => {
       Password: password,
     }
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/Auth/Login',
-        data
-      )
+      const response = await axios.post(serverUrl + '/api/Auth/Login', data)
       if (response.status == 200) {
         toast.success('You are suscesfully logged in')
         sessionStorage.setItem('AccessToken', response.data.data.accesToken)

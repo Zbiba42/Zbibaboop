@@ -2,6 +2,8 @@ import { useRef } from 'react'
 import { Box, TextField, Button, Typography } from '@mui/material'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { serverUrl } from '../config'
+
 interface LoginProps {
   setForm: (arg: string) => void
 }
@@ -54,10 +56,7 @@ export const SinupForm = ({ setForm }: LoginProps) => {
         Password: password,
       }
       try {
-        const response = await axios.post(
-          'http://localhost:5000/api/Auth/Signup',
-          data
-        )
+        const response = await axios.post(serverUrl + '/api/Auth/Signup', data)
         if (response.status == 200) {
           toast.success('account created suscesfully !')
           setForm('login')
