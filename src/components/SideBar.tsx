@@ -14,7 +14,12 @@ export const SideBar = () => {
   return (
     <Box sx={SideBarBox}>
       <Box sx={HomeButton}>
-        <img src={logo} alt="" className="text-xl m-1 transition-all" />
+        <img
+          src={logo}
+          alt=""
+          className="text-xl m-1 transition-all filter invert 100"
+          draggable="false"
+        />
       </Box>
       {Buttons.map((button) => {
         return (

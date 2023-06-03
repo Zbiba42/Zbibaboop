@@ -23,7 +23,7 @@ export const HomeButton: object = {
     backgroundColor: '#0288e9',
   },
   '&:hover img': {
-    filter: 'invert(100%)',
+    filter: 'invert(0)',
   },
 }
 
