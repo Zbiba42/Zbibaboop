@@ -1,9 +1,6 @@
 const mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
-  ImagePath: {
-    type: String,
-  },
   Fullname: {
     type: String,
     required: true,
@@ -24,6 +21,43 @@ const UserSchema = new mongoose.Schema({
     required: 'Password is required',
     min: [6, 'Password must be at least 6 characters'],
   },
+  ProfilePath: {
+    type: String,
+    default: '/uploads/global/NoProfile.png',
+  },
+  ConverPath: {
+    type: String,
+    default: '/uploads/global/NoCover.png',
+  },
+  bio: {
+    type: String,
+    default: '',
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'nigga'],
+  },
+  Work: {
+    type: String,
+  },
+  Education: {
+    type: Object,
+  },
+  City: {
+    type: String,
+  },
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  friendRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FriendRequest',
+    },
+  ],
 })
 
 module.exports = mongoose.model('User', UserSchema)
