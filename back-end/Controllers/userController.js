@@ -1,6 +1,10 @@
 const multer = require('multer')
 const storage = multer.diskStorage({
-  destination: './uploads/',
+  destination: (req, file, callback) => {
+    const userId = req.body.id
+    const uploadPath = `./uploads/${userId}/`
+    callback(null, uploadPath)
+  },
   filename: (req, file, callback) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
     const extension = file.originalname.split('.').pop()
@@ -14,7 +18,7 @@ const User = require('../models/user')
 
 const getUser = async (req, res) => {
   try {
-    const id = req.body.id
+    const id = req.query.id
     const user = await User.findOne({ _id: id })
     res.status(200).json({ succes: true, data: user })
   } catch (error) {
