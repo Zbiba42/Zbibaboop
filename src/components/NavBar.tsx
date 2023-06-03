@@ -1,12 +1,15 @@
 import { Box } from '@mui/material'
-import profile from '../assets/NoProfile.png'
+import jwtDecode from 'jwt-decode'
 import { NavBox } from '../styles/navStyle'
 import { Link } from 'react-router-dom'
 import Badge, { BadgeProps } from '@mui/material/Badge'
 import { styled } from '@mui/material/styles'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { HandleProfileClickContext } from '../routes/AppRoutes'
+import { serverUrl } from '../config'
+import axios from 'axios'
 export const NavBar = () => {
+  const [profile, setProfile] = useState('')
   const animateContext = useContext(HandleProfileClickContext)
   const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -16,6 +19,25 @@ export const NavBar = () => {
       padding: '0 4px',
     },
   }))
+  const getUser = async () => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken) {
+      const { data } = await axios.get(serverUrl + '/api/user/getUser', {
+        params: {
+          id: decodedToken.id,
+        },
+      })
+
+      setProfile(serverUrl + data.data.ProfilePath)
+    }
+  }
+  useEffect(() => {
+    getUser()
+  }, [animateContext])
   return (
     <Box sx={NavBox}>
       <Box
