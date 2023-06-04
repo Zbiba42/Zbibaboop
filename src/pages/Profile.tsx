@@ -2,10 +2,11 @@ import { useEffect } from 'react'
 import { motion, useAnimation, AnimationControls } from 'framer-motion'
 import { useContext } from 'react'
 import { HandleProfileClickContext } from '../routes/AppRoutes'
+import { ProfileContent } from '../components/ProfileContent'
 export const Profile = () => {
   const controls = useAnimation()
   const animateContext = useContext(HandleProfileClickContext)
-
+  const setAnimate = animateContext?.setAnimate
   const AnimateFunction = async () => {
     if (animateContext?.animate === 'open') {
       await controls.start({ x: 81 })
@@ -18,8 +19,6 @@ export const Profile = () => {
   }, [animateContext?.animate])
 
   const onAnimationComplete = (e: any) => {
-    console.log(e)
-
     if (e.x === '-100%') {
       animateContext?.setAnimate('close')
     }
@@ -36,15 +35,12 @@ export const Profile = () => {
         left: 0,
         width: '50%',
         height: '100vh',
-        backgroundColor: 'blue',
+        backgroundColor: '#F9F9F9',
         borderRight: '1px solid black',
       }}
       onAnimationComplete={onAnimationComplete}
     >
-      Profile Content
-      <button onClick={() => animateContext?.setAnimate('closing')}>
-        Close
-      </button>
+      <ProfileContent setAnimate={setAnimate} />
     </motion.div>
   )
 }
