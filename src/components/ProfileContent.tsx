@@ -11,13 +11,13 @@ interface Props {
 }
 export const ProfileContent = ({ setAnimate }: Props) => {
   const [profile, setProfile] = useState<{
-    ConverPath: string
+    CoverPath: string
     ProfilePath: string
     Fullname: string
   }>()
   const [value, setValue] = useState(0)
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
   const getUser = async () => {
@@ -47,7 +47,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
           X
         </button>
         <img
-          src={serverUrl + profile?.ConverPath}
+          src={serverUrl + profile?.CoverPath}
           alt=""
           draggable="false"
           className="h-48"
