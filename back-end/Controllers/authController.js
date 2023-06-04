@@ -25,7 +25,7 @@ const signUp = async (req, res) => {
 const logIn = async (req, res) => {
   try {
     const user = await User.findOne({ Email: req.body.Email })
-    if (bcrypt.compare(req.body.Password, user.Password)) {
+    if (user && bcrypt.compare(req.body.Password, user.Password)) {
       const data = {
         id: user.id,
         Fullname: user.Fullname,

@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: '/uploads/global/NoProfile.png',
   },
-  ConverPath: {
+  CoverPath: {
     type: String,
     default: '/uploads/global/NoCover.png',
   },
