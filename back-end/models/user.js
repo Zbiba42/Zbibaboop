@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema({
   },
   City: {
     type: String,
-    default: String,
+    default: '',
   },
   friends: [
     {
