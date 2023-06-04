@@ -35,16 +35,20 @@ const UserSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ['male', 'female', 'nigga'],
+    enum: ['male', 'female', ''],
+    default: '',
   },
   Work: {
     type: String,
+    default: '',
   },
   Education: {
-    type: Object,
+    type: Array,
+    default: [],
   },
   City: {
     type: String,
+    default: String,
   },
   friends: [
     {
