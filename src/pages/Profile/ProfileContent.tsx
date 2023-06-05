@@ -6,12 +6,13 @@ import axios from 'axios'
 import { Box, Button, Tab, Tabs } from '@mui/material'
 import { TabPanel } from '../../components/Profile/TabContent'
 import { About } from '../../components/Profile/About'
+import { ProfileEdit } from '../../components/Profile/ProfileEdit'
 
 interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>
 }
 export const ProfileContent = ({ setAnimate }: Props) => {
-  const [profile, setProfile] = useState<{
+  interface profile {
     CoverPath: string
     ProfilePath: string
     Fullname: string
@@ -20,9 +21,10 @@ export const ProfileContent = ({ setAnimate }: Props) => {
     Work: string
     Education: string
     City: string
-  }>()
+  }
+  const [profile, setProfile] = useState<profile>()
   const [value, setValue] = useState(0)
-
+  const [isEditing, SetEditing] = useState(false)
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
@@ -46,61 +48,66 @@ export const ProfileContent = ({ setAnimate }: Props) => {
   useEffect(() => {
     getUser()
   }, [])
-  return (
-    <>
-      <Box sx={{ marginBottom: '0.5rem', boxShadow: 1 }}>
-        <button className="absolute" onClick={() => setAnimate?.('closing')}>
-          X
-        </button>
-        <img
-          src={serverUrl + profile?.CoverPath}
-          alt=""
-          draggable="false"
-          className="h-48"
-        />
-        <img
-          src={serverUrl + profile?.ProfilePath}
-          alt=""
-          draggable="false"
-          className=" m-3 w-40 rounded-full border border-black absolute top-[100px]"
-        />
-        <h1 className="mt-5 font-bold text-3xl text-[#272838] capitalize text-left ml-44">
-          {profile?.Fullname}
-        </h1>
-        <Button
-          color="inherit"
-          variant="text"
-          style={{ marginRight: '1rem' }}
-          className="float-right"
-        >
-          <EditIcon fontSize="small" className="mr-1 " /> Edit Profile
-        </Button>
-        <Tabs
-          sx={{
-            clear: 'both',
-          }}
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          <Tab label="Posts" />
-          <Tab label="About" />
-          <Tab label="Friends" />
-          <Tab label="Photos" />
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index={0}>
-        Posts
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <About profile={profile} />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Friends
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Photos
-      </TabPanel>
-    </>
-  )
+  if (!isEditing) {
+    return (
+      <>
+        <Box sx={{ marginBottom: '0.5rem', boxShadow: 1 }}>
+          <button className="absolute" onClick={() => setAnimate?.('closing')}>
+            X
+          </button>
+          <img
+            src={serverUrl + profile?.CoverPath}
+            alt=""
+            draggable="false"
+            className="h-48"
+          />
+          <img
+            src={serverUrl + profile?.ProfilePath}
+            alt=""
+            draggable="false"
+            className=" m-3 w-40 rounded-full border border-black absolute top-[100px]"
+          />
+          <h1 className="mt-5 font-bold text-3xl text-[#272838] capitalize text-left ml-44">
+            {profile?.Fullname}
+          </h1>
+          <Button
+            color="inherit"
+            variant="text"
+            style={{ marginRight: '1rem' }}
+            className="float-right"
+            onClick={() => SetEditing(true)}
+          >
+            <EditIcon fontSize="small" className="mr-1" /> Edit Profile
+          </Button>
+          <Tabs
+            sx={{
+              clear: 'both',
+            }}
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="Posts" />
+            <Tab label="About" />
+            <Tab label="Friends" />
+            <Tab label="Photos" />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          Posts
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <About profile={profile} />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Friends
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          Photos
+        </TabPanel>
+      </>
+    )
+  } else {
+    return <ProfileEdit profile={profile} />
+  }
 }
