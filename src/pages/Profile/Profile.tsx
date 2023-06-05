@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { motion, useAnimation, AnimationControls } from 'framer-motion'
 import { useContext } from 'react'
-import { HandleProfileClickContext } from '../routes/AppRoutes'
-import { ProfileContent } from '../components/ProfileContent'
+import { HandleProfileClickContext } from '../../routes/AppRoutes'
+import { ProfileContent } from './ProfileContent'
 export const Profile = () => {
   const controls = useAnimation()
   const animateContext = useContext(HandleProfileClickContext)
@@ -35,6 +35,7 @@ export const Profile = () => {
         left: 0,
         width: '50%',
         height: '100vh',
+        overflow: 'scroll',
         backgroundColor: '#F9F9F9',
         borderRight: '1px solid black',
       }}

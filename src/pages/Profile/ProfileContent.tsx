@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import jwtDecode from 'jwt-decode'
-import { serverUrl } from '../config'
+import { serverUrl } from '../../config'
 import axios from 'axios'
 import { Box, Button, Tab, Tabs } from '@mui/material'
-import { TabPanel } from './TabContent'
-import HomeIcon from '@mui/icons-material/Home'
-import WorkIcon from '@mui/icons-material/Work'
-import SchoolIcon from '@mui/icons-material/School'
+import { TabPanel } from '../../components/Profile/TabContent'
+import { About } from '../../components/Profile/About'
+
 interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>
 }
@@ -94,41 +93,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
         Posts
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Box sx={{ textAlign: 'left' }}>
-          <h2 className="font-bold text-xl text-[#272838] ">Bio</h2>
-          <h3 className="text-center">
-            If you’re going through hell, keep going
-          </h3>
-          <hr className="w-[100%] m-2 text-[#272838]" />
-
-          <h2 className="mb-1 text-xl text-[#272838] ">
-            <HomeIcon fontSize="medium" /> Lives In{' '}
-            <span className="font-bold">Rabat, Morocco</span>
-          </h2>
-
-          <h2 className="mb-1 text-xl text-[#272838] ">
-            <WorkIcon fontSize="medium" />{' '}
-            {profile?.Work ? (
-              <>
-                Works at <span className="font-bold">{profile?.Work}</span>
-              </>
-            ) : (
-              'No workplaces to show'
-            )}
-          </h2>
-
-          <h2 className="mb-1 text-xl text-[#272838] ">
-            <SchoolIcon fontSize="medium" />{' '}
-            {profile?.Work ? (
-              <>
-                Studies at{' '}
-                <span className="font-bold">{profile?.Education}</span>
-              </>
-            ) : (
-              'No schools to show'
-            )}
-          </h2>
-        </Box>
+        <About profile={profile} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Friends
