@@ -8,8 +8,8 @@ export const SideBar = () => {
   }
   const Buttons: Button[] = [
     { name: 'search', icon: 'fa-solid fa-magnifying-glass' },
-    { name: 'search', icon: 'fa-solid fa-magnifying-glass' },
-    { name: 'search', icon: 'fa-solid fa-magnifying-glass' },
+    { name: 'search2', icon: 'fa-solid fa-magnifying-glass' },
+    { name: 'search3', icon: 'fa-solid fa-magnifying-glass' },
   ]
   return (
     <Box sx={SideBarBox}>
@@ -23,7 +23,7 @@ export const SideBar = () => {
       </Box>
       {Buttons.map((button) => {
         return (
-          <Box sx={SideBarButton}>
+          <Box sx={SideBarButton} key={button.name}>
             <i className={`${button.icon} text-xl m-1`}></i>
             <h4>{button.name}</h4>
           </Box>
