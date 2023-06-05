@@ -21,12 +21,12 @@ export const About = ({ profile }: Props) => {
       <h3 className="text-center">If you’re going through hell, keep going</h3>
       <hr className="w-[100%] m-2 text-[#272838]" />
       <h2 className="font-bold text-xl text-[#272838] ">City</h2>
-      <h2 className="m-1 mb-2 text-xl text-[#272838] ">
+      <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
         <HomeIcon fontSize="medium" /> Lives In{' '}
         <span className="font-bold">Rabat, Morocco</span>
       </h2>
       <h2 className="font-bold text-xl text-[#272838] ">Work</h2>
-      <h2 className="m-1 mb-2 text-xl text-[#272838] ">
+      <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
         <WorkIcon fontSize="medium" />{' '}
         {profile?.Work ? (
           <>
@@ -38,7 +38,7 @@ export const About = ({ profile }: Props) => {
       </h2>
       <h2 className="font-bold text-xl text-[#272838] ">College</h2>
 
-      <h2 className="m-1 mb-2 text-xl text-[#272838] ">
+      <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
         <SchoolIcon fontSize="medium" />{' '}
         {profile?.Work ? (
           <>
@@ -51,7 +51,7 @@ export const About = ({ profile }: Props) => {
 
       <h2 className="font-bold text-xl text-[#272838]">High school</h2>
 
-      <h2 className="m-1 mb-2 text-xl text-[#272838] ">
+      <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
         <SchoolIcon fontSize="medium" />{' '}
         {profile?.Work ? (
           <>
