@@ -19,8 +19,10 @@ export const ProfileContent = ({ setAnimate }: Props) => {
     bio: string
     gender: string
     Work: string
-    Education: string
     City: string
+    Country: string
+    College: string
+    HighSchool: string
   }
   const [profile, setProfile] = useState<profile>()
   const [value, setValue] = useState(0)

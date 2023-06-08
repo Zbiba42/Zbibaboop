@@ -10,8 +10,10 @@ interface Props {
     bio: string
     gender: string
     Work: string
-    Education: string
     City: string
+    Country: string
+    College: string
+    HighSchool: string
   }
 }
 export const About = ({ profile }: Props) => {
@@ -42,7 +44,7 @@ export const About = ({ profile }: Props) => {
         <SchoolIcon fontSize="medium" />{' '}
         {profile?.Work ? (
           <>
-            Studies at <span className="font-bold">{profile?.Education}</span>
+            Studies at <span className="font-bold">{profile?.College}</span>
           </>
         ) : (
           'No schools to show'
@@ -55,7 +57,7 @@ export const About = ({ profile }: Props) => {
         <SchoolIcon fontSize="medium" />{' '}
         {profile?.Work ? (
           <>
-            Studies at <span className="font-bold">{profile?.Education}</span>
+            Studies at <span className="font-bold">{profile?.HighSchool}</span>
           </>
         ) : (
           'No schools to show'
