@@ -1,10 +1,12 @@
 import { serverUrl } from '../../config'
-import { Box } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import HomeIcon from '@mui/icons-material/Home'
 import WorkIcon from '@mui/icons-material/Work'
 import SchoolIcon from '@mui/icons-material/School'
 import EditIcon from '@mui/icons-material/Edit'
-import { useState, useRef } from 'react'
+import { useState, useRef, ChangeEvent, useEffect } from 'react'
+import Select from 'react-select'
+import axios from 'axios'
 
 interface Props {
   profile?: {
@@ -14,10 +16,13 @@ interface Props {
     bio: string
     gender: string
     Work: string
-    Education: string
     City: string
+    Country: string
+    College: string
+    HighSchool: string
   }
 }
+
 export const ProfileEdit = ({ profile }: Props) => {
   const [profileHover, setProfileHover] = useState(false)
   const [coverHover, setCoverHover] = useState(false)
@@ -42,6 +47,45 @@ export const ProfileEdit = ({ profile }: Props) => {
     }
   }
 
+  interface CitySearchOption {
+    value: string
+    label: string
+  }
+  const [inputValue, setInputValue] = useState<string>('')
+  const [country, setCountry] = useState<string>('')
+  const [cities, setCities] = useState<CitySearchOption[]>([])
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value)
+    setCities([])
+  }
+  const handleSelectCountry = async () => {
+    try {
+      const response = await axios.post(
+        'https://countriesnow.space/api/v0.1/countries/cities',
+        {
+          country: inputValue,
+        }
+      )
+      const citiesData: string[] = response.data?.data
+      if (citiesData) {
+        setCountry(inputValue)
+        const formattedCities: CitySearchOption[] = citiesData.map(
+          (city: string) => ({
+            value: city,
+            label: city,
+          })
+        )
+        setCities(formattedCities)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+  useEffect(() => {
+    {
+      profile?.Country ? setInputValue(profile?.Country) : ''
+    }
+  })
   return (
     <>
       <Box sx={{ height: '20rem', marginBottom: '0.5rem', boxShadow: 1 }}>
@@ -116,51 +160,95 @@ export const ProfileEdit = ({ profile }: Props) => {
       </Box>
       <Box sx={{ p: 3, textAlign: 'left' }}>
         <h2 className="font-bold text-xl text-[#272838] ">Bio</h2>
-        <h3 className="text-center">
-          If you’re going through hell, keep going
-        </h3>
+        <TextField
+          type="text"
+          variant="standard"
+          sx={{ width: '60%', marginLeft: '1rem' }}
+          placeholder="Please enter you Bio !"
+          defaultValue={profile?.bio ? profile?.bio : ''}
+        />
         <hr className="w-[100%] m-2 text-[#272838]" />
         <h2 className="font-bold text-xl text-[#272838] ">City</h2>
-        <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
+        <h2 className="m-1 mb-2 text-lg  text-[#272838] flex gap-2">
           <HomeIcon fontSize="medium" /> Lives In{' '}
-          <span className="font-bold">Rabat, Morocco</span>
+          <TextField
+            type="text"
+            variant="standard"
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="Enter a country"
+          />
+          <Button
+            variant="outlined"
+            onClick={handleSelectCountry}
+            sx={{ color: '#272838', border: '1px solid #272838' }}
+          >
+            Search
+          </Button>
+          <Select
+            options={cities}
+            defaultInputValue={profile?.City ? profile?.City : ''}
+            styles={{
+              control: (provided: any) => ({
+                ...provided,
+                width: 200,
+                border: 'none', // Adjust the width value as needed
+              }),
+              menu: (provided: any) => ({
+                ...provided,
+                width: 200, // Adjust the width value as needed
+              }),
+            }}
+          />
         </h2>
         <h2 className="font-bold text-xl text-[#272838] ">Work</h2>
         <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
           <WorkIcon fontSize="medium" />{' '}
-          {profile?.Work ? (
-            <>
-              Works at <span className="font-bold">{profile?.Work}</span>
-            </>
-          ) : (
-            'No workplaces to show'
-          )}
+          <TextField
+            type="text"
+            variant="standard"
+            sx={{ width: '60%', margin: '0 auto' }}
+            placeholder="Please enter a work place"
+            defaultValue={profile?.Work ? profile?.Work : ''}
+          />
         </h2>
         <h2 className="font-bold text-xl text-[#272838] ">College</h2>
 
         <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
           <SchoolIcon fontSize="medium" />{' '}
-          {profile?.Work ? (
-            <>
-              Studies at <span className="font-bold">{profile?.Education}</span>
-            </>
-          ) : (
-            'No schools to show'
-          )}
+          <TextField
+            type="text"
+            variant="standard"
+            sx={{ width: '60%', margin: '0 auto' }}
+            placeholder="Please enter a school name"
+            defaultValue={profile?.College ? profile?.College : ''}
+          />
         </h2>
 
         <h2 className="font-bold text-xl text-[#272838]">High school</h2>
 
         <h2 className="m-1 mb-2 text-lg  text-[#272838] ">
           <SchoolIcon fontSize="medium" />{' '}
-          {profile?.Work ? (
-            <>
-              Studies at <span className="font-bold">{profile?.Education}</span>
-            </>
-          ) : (
-            'No schools to show'
-          )}
+          <TextField
+            type="text"
+            variant="standard"
+            sx={{ width: '60%', margin: '0 auto' }}
+            placeholder="Please enter a school name"
+            defaultValue={profile?.HighSchool ? profile?.HighSchool : ''}
+          />
         </h2>
+
+        <div className="mt-4 w-[100%] flex justify-center">
+          <Button
+            variant="outlined"
+            sx={{
+              color: '#272838',
+              border: '1px solid #272838',
+            }}
+          >
+            Save changes
+          </Button>
+        </div>
       </Box>
     </>
   )
