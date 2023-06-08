@@ -42,9 +42,17 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  Education: {
-    type: Array,
-    default: [],
+  College: {
+    type: String,
+    default: '',
+  },
+  HighSchool: {
+    type: String,
+    default: '',
+  },
+  Country: {
+    type: String,
+    default: '',
   },
   City: {
     type: String,
