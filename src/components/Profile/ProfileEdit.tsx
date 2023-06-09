@@ -16,13 +16,24 @@ export const ProfileEdit = ({ profile }: Props) => {
   const coverPic = useRef<HTMLInputElement>(null)
   const FullName = useRef<HTMLInputElement>(null)
   const [inputValue, setInputValue] = useState<string>('')
+  const BioRef = useRef<HTMLInputElement>(null)
   const [country, setCountry] = useState<string>('')
   const [cities, setCities] = useState<CitySearchOption[]>([])
+  const [city, setCity] = useState<string>()
+  const WorkRef = useRef<HTMLInputElement>(null)
+  const collegeRef = useRef<HTMLInputElement>(null)
+  const highSchoolRef = useRef<HTMLInputElement>(null)
 
   const handleFormSubmit = () => {
     console.log('profilePic : ' + profilePic.current?.files?.[0])
     console.log('coverPic : ' + coverPic.current?.files?.[0])
     console.log('FullName : ' + FullName.current?.value)
+    console.log('Bio : ' + BioRef.current?.value)
+    console.log('Country : ' + country)
+    console.log('City : ' + city)
+    console.log('Work : ' + WorkRef.current?.value)
+    console.log('College : ' + collegeRef.current?.value)
+    console.log('High School : ' + highSchoolRef.current?.value)
   }
   useEffect(() => {
     {
@@ -57,11 +68,16 @@ export const ProfileEdit = ({ profile }: Props) => {
       {/* About infos */}
       <Box sx={{ p: 3, textAlign: 'left' }}>
         <AboutUpdate
+          BioRef={BioRef}
           inputValue={inputValue}
           setInputValue={setInputValue}
           setCities={setCities}
           setCountry={setCountry}
           cities={cities}
+          setCity={setCity}
+          WorkRef={WorkRef}
+          collegeRef={collegeRef}
+          highSchoolRef={highSchoolRef}
         />
 
         <div className="mt-4 w-[100%] flex justify-center">
