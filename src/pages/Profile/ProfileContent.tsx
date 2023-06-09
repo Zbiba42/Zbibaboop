@@ -11,19 +11,19 @@ import { ProfileEdit } from '../../components/Profile/ProfileEdit'
 interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>
 }
+export interface profile {
+  CoverPath: string
+  ProfilePath: string
+  Fullname: string
+  bio: string
+  gender: string
+  Work: string
+  City: string
+  Country: string
+  College: string
+  HighSchool: string
+}
 export const ProfileContent = ({ setAnimate }: Props) => {
-  interface profile {
-    CoverPath: string
-    ProfilePath: string
-    Fullname: string
-    bio: string
-    gender: string
-    Work: string
-    City: string
-    Country: string
-    College: string
-    HighSchool: string
-  }
   const [profile, setProfile] = useState<profile>()
   const [value, setValue] = useState(0)
   const [isEditing, SetEditing] = useState(false)
@@ -67,7 +67,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
             src={serverUrl + profile?.ProfilePath}
             alt=""
             draggable="false"
-            className=" m-3 w-40 rounded-full border border-black absolute top-[100px]"
+            className=" m-3 w-40 h-40 object-cover rounded-full border border-black absolute top-[100px]"
           />
           <h1 className="mt-5 font-bold text-3xl text-[#272838] capitalize text-left ml-44">
             {profile?.Fullname}
