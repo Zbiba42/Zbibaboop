@@ -4,14 +4,18 @@ import { useState, useRef, useEffect } from 'react'
 import { ImagesUpdate } from './ImagesUpdate'
 import { AboutUpdate } from './AboutUpdate'
 import { profile } from '../../pages/Profile/ProfileContent'
+import axios from 'axios'
+import jwtDecode from 'jwt-decode'
+import { toast } from 'react-toastify'
 interface Props {
   profile?: profile
+  SetEditing: React.Dispatch<React.SetStateAction<boolean>>
 }
 interface CitySearchOption {
   value: string
   label: string
 }
-export const ProfileEdit = ({ profile }: Props) => {
+export const ProfileEdit = ({ profile, SetEditing }: Props) => {
   const profilePic = useRef<HTMLInputElement>(null)
   const coverPic = useRef<HTMLInputElement>(null)
   const FullName = useRef<HTMLInputElement>(null)
@@ -23,23 +27,79 @@ export const ProfileEdit = ({ profile }: Props) => {
   const WorkRef = useRef<HTMLInputElement>(null)
   const collegeRef = useRef<HTMLInputElement>(null)
   const highSchoolRef = useRef<HTMLInputElement>(null)
+  interface data {
+    [key: string]: string | File | undefined
+    id: string | undefined
+    Fullname: string | undefined
+    ProfilePath: string | File | undefined
+    CoverPath: string | File | undefined
+    bio: string
+    Work: string
+    College: string
+    HighSchool: string
+    Country: string
+    City: string
+  }
+  const prepareFormData = (data: data) => {
+    const formData = new FormData()
+    Object.keys(data).forEach((key) => {
+      if (data[key]) {
+        formData.append(key, data[key] as string | Blob)
+      }
+    })
+    return formData
+  }
 
-  const handleFormSubmit = () => {
-    console.log('profilePic : ' + profilePic.current?.files?.[0])
-    console.log('coverPic : ' + coverPic.current?.files?.[0])
-    console.log('FullName : ' + FullName.current?.value)
-    console.log('Bio : ' + BioRef.current?.value)
-    console.log('Country : ' + country)
-    console.log('City : ' + city)
-    console.log('Work : ' + WorkRef.current?.value)
-    console.log('College : ' + collegeRef.current?.value)
-    console.log('High School : ' + highSchoolRef.current?.value)
+  const handleFormSubmit = async () => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+    const data = {
+      id: decodedToken?.id,
+      Fullname: FullName.current?.value,
+      ProfilePath: profilePic.current?.files?.[0],
+      CoverPath: coverPic.current?.files?.[0],
+      bio: BioRef.current?.value || '',
+      Work: WorkRef.current?.value || '',
+      College: collegeRef.current?.value || '',
+      HighSchool: highSchoolRef.current?.value || '',
+      Country: country || '',
+      City: city || '',
+    }
+    if (!data.Fullname) {
+      toast.error('Please enter your full name')
+      return
+    }
+    const formData = prepareFormData(data)
+
+    try {
+      const response = await axios.post(
+        serverUrl + '/api/user/updateUser',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+      toast.success(response.data.message)
+      SetEditing(false)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
   }
   useEffect(() => {
     {
       profile?.Country ? setInputValue(profile?.Country) : ''
     }
-  })
+    {
+      profile?.Country ? setCountry(profile?.Country) : ''
+    }
+    {
+      profile?.City ? setCity(profile?.City) : ''
+    }
+  }, [])
   return (
     <>
       <Box sx={{ height: '18rem', marginBottom: '0.5rem', boxShadow: 1 }}>
@@ -53,7 +113,7 @@ export const ProfileEdit = ({ profile }: Props) => {
         <TextField
           label="Full Name"
           type="text"
-          variant="outlined"
+          variant="standard"
           defaultValue={profile?.Fullname}
           inputRef={FullName}
           placeholder="Please enter your name"
@@ -68,6 +128,7 @@ export const ProfileEdit = ({ profile }: Props) => {
       {/* About infos */}
       <Box sx={{ p: 3, textAlign: 'left' }}>
         <AboutUpdate
+          profile={profile}
           BioRef={BioRef}
           inputValue={inputValue}
           setInputValue={setInputValue}
@@ -80,7 +141,7 @@ export const ProfileEdit = ({ profile }: Props) => {
           highSchoolRef={highSchoolRef}
         />
 
-        <div className="mt-4 w-[100%] flex justify-center">
+        <div className="mt-4 w-[100%] flex justify-center gap-3">
           <Button
             variant="outlined"
             onClick={handleFormSubmit}
@@ -90,6 +151,16 @@ export const ProfileEdit = ({ profile }: Props) => {
             }}
           >
             Save changes
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => SetEditing(false)}
+            sx={{
+              color: '#272838',
+              border: '1px solid #272838',
+            }}
+          >
+            Cancel
           </Button>
         </div>
       </Box>
