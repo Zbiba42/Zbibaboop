@@ -20,9 +20,9 @@ function App() {
         try {
           const oldrefreshToken = sessionStorage.getItem('RefreshToken')
           const response = await axios.post(
-            'http://localhost:5000/api/Authentication/refresh',
+            'http://localhost:5000/api/Auth/refresh',
             {
-              token: oldrefreshToken,
+              refreshToken: oldrefreshToken,
             }
           )
 
