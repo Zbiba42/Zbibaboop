@@ -42,14 +42,12 @@ export const ProfileContent = ({ setAnimate }: Props) => {
           id: decodedToken.id,
         },
       })
-
       setProfile(data.data)
-      console.log(data.data)
     }
   }
   useEffect(() => {
     getUser()
-  }, [])
+  }, [isEditing])
   if (!isEditing) {
     return (
       <>
@@ -61,7 +59,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
             src={serverUrl + profile?.CoverPath}
             alt=""
             draggable="false"
-            className="h-48"
+            className="w-[100%] h-48 object-cover "
           />
           <img
             src={serverUrl + profile?.ProfilePath}
@@ -110,6 +108,6 @@ export const ProfileContent = ({ setAnimate }: Props) => {
       </>
     )
   } else {
-    return <ProfileEdit profile={profile} />
+    return <ProfileEdit profile={profile} SetEditing={SetEditing} />
   }
 }
