@@ -1,19 +1,3 @@
-const multer = require('multer')
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    const userId = req.body.id
-    const uploadPath = `./uploads/${userId}/`
-    callback(null, uploadPath)
-  },
-  filename: (req, file, callback) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-    const extension = file.originalname.split('.').pop()
-    callback(null, file.fieldname + '-' + uniqueSuffix + '.' + extension)
-  },
-})
-
-const upload = multer({ storage })
-
 const User = require('../models/user')
 
 const getUser = async (req, res) => {
@@ -28,35 +12,20 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    upload.single('image')(req, res, async (err) => {
-      if (err) {
-        console.error(err)
-        return res.status(400).send('Error uploading file')
-      }
+    const userId = req.body.id
+    const data = req.body
 
-      const { file } = req
-      if (file) {
-        const path = file.destination + file.filename
-        const { body } = req
-        const data = { body, ImagePath: path }
-        console.log(data)
-        await User.updateOne({ _id: req.body.id }, { data })
-        return res.status(200).send('User updated successfully')
-      } else {
-        const { body } = req
-        const data = body
-        console.log(data)
-        try {
-          await User.updateOne({ _id: req.body.id }, { data })
-          return res.status(200).send('User updated successfully')
-        } catch (error) {
-          res.status(400).json({ succes: false, error: error.message })
-        }
-      }
-    })
+    delete data.id
+    if (req.files && req.files['ProfilePath']) {
+      data.ProfilePath = '/' + req.files['ProfilePath'][0].path
+    }
+    if (req.files && req.files['CoverPath']) {
+      data.CoverPath = '/' + req.files['CoverPath'][0].path
+    }
+    await User.updateOne({ _id: userId }, data)
+    res.status(200).json({ message: 'User updated successfully' })
   } catch (error) {
     res.status(400).json({ succes: false, error: error.message })
   }
 }
-
 module.exports = { getUser, updateUser }
