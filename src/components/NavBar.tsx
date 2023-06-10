@@ -75,7 +75,7 @@ export const NavBar = () => {
         onClick={() => animateContext?.setAnimate('open')}
       >
         <img
-          className=" rounded-full  w-9 m-auto object-cover"
+          className=" rounded-full  w-9 h-9 m-auto object-cover"
           src={profile}
           alt=""
         />
