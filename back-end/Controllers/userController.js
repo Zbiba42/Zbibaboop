@@ -1,5 +1,17 @@
 const User = require('../models/user')
 
+const search = async (req, res) => {
+  try {
+    const query = req.query.search
+    const users = await User.find({
+      Fullname: { $regex: query, $options: 'i' },
+    })
+    res.status(200).json({ succes: true, data: users })
+  } catch (error) {
+    res.status(404).json({ succes: false, error: error.message })
+  }
+}
+
 const getUser = async (req, res) => {
   try {
     const id = req.query.id
@@ -28,4 +40,5 @@ const updateUser = async (req, res) => {
     res.status(400).json({ succes: false, error: error.message })
   }
 }
-module.exports = { getUser, updateUser }
+
+module.exports = { search, getUser, updateUser }
