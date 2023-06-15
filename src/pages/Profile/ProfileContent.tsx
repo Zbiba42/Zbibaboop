@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
+import CloseIcon from '@mui/icons-material/Close'
 import jwtDecode from 'jwt-decode'
 import { serverUrl } from '../../config'
 import axios from 'axios'
@@ -52,8 +53,11 @@ export const ProfileContent = ({ setAnimate }: Props) => {
     return (
       <>
         <Box sx={{ marginBottom: '0.5rem', boxShadow: 1 }}>
-          <button className="absolute" onClick={() => setAnimate?.('closing')}>
-            X
+          <button
+            className="absolute right-1"
+            onClick={() => setAnimate?.('closing')}
+          >
+            <CloseIcon sx={{ color: 'white' }} />
           </button>
           <img
             src={serverUrl + profile?.CoverPath}
