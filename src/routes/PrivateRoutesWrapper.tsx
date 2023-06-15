@@ -5,6 +5,7 @@ import { SideBar } from '../components/SideBar'
 import { Profile } from '../pages/Profile/Profile'
 import { useContext } from 'react'
 import { HandleProfileClickContext } from '../routes/AppRoutes'
+import { Search } from '../pages/Search'
 
 export const PrivateRoutesWrapper = () => {
   const token = sessionStorage.getItem('AccessToken')
@@ -22,6 +23,7 @@ export const PrivateRoutesWrapper = () => {
     <>
       <SideBar />
       <NavBar />
+      <Search />
       {animateContext?.animate === 'open' ||
       animateContext?.animate === 'closing' ? (
         <Profile />
