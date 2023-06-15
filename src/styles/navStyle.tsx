@@ -2,6 +2,8 @@ export const NavBox: object = {
   width: window.innerWidth * 0.23,
   minWidth: '315px',
   position: 'fixed',
+  backgroundColor: 'white',
+  zIndex: 99,
   right: '1.5rem',
   top: '1.5rem',
   height: 65,
