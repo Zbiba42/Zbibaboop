@@ -8,7 +8,7 @@ app.use('/uploads', express.static('uploads'))
 const mongoose = require('mongoose')
 
 mongoose.connect('mongodb://127.0.0.1:27017/zbibabook')
-const { authToken } = require('./Controllers/authController')
+const { authToken } = require('./middlewares/AuthToken')
 
 const Auth = require('./Routes/Auth')
 const User = require('./Routes/user')
