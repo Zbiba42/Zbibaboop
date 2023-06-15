@@ -31,6 +31,7 @@ export const Profile = () => {
       transition={{ type: 'spring', duration: 0.8 }}
       style={{
         position: 'absolute',
+        zIndex: 2,
         top: 0,
         left: 0,
         width: '50%',
