@@ -1,19 +1,21 @@
 import { Box } from '@mui/material'
 import logo from '../../logo.png'
 import { HomeButton, SideBarButton, SideBarBox } from '../styles/sideBarStyle'
+import { Link } from 'react-router-dom'
 export const SideBar = () => {
   interface Button {
     name: string
     icon: string
+    link: string
   }
   const Buttons: Button[] = [
-    { name: 'search', icon: 'fa-solid fa-magnifying-glass' },
-    { name: 'search2', icon: 'fa-solid fa-magnifying-glass' },
-    { name: 'search3', icon: 'fa-solid fa-magnifying-glass' },
+    { name: 'search', icon: 'fa-solid fa-magnifying-glass', link: '/search' },
+    { name: 'search2', icon: 'fa-solid fa-magnifying-glass', link: '/search' },
+    { name: 'search3', icon: 'fa-solid fa-magnifying-glass', link: '/search' },
   ]
   return (
     <Box sx={SideBarBox}>
-      <Box sx={HomeButton}>
+      <Box sx={HomeButton} component={Link} to={'/home'}>
         <img
           src={logo}
           alt=""
@@ -24,8 +26,20 @@ export const SideBar = () => {
       {Buttons.map((button) => {
         return (
           <Box sx={SideBarButton} key={button.name}>
-            <i className={`${button.icon} text-xl m-1`}></i>
-            <h4>{button.name}</h4>
+            <Link
+              to={button.link}
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                justifyItems: 'center',
+              }}
+            >
+              <i className={`${button.icon} text-xl m-1`}></i>
+              <h4>{button.name}</h4>
+            </Link>
           </Box>
         )
       })}
