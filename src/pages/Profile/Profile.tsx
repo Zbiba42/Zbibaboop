@@ -30,7 +30,7 @@ export const Profile = () => {
       animate={controls as AnimationControls}
       transition={{ type: 'spring', duration: 0.8 }}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         zIndex: 2,
         top: 0,
         left: 0,
