@@ -1,25 +1,18 @@
-import { TextField } from '@mui/material'
+import { SearchFilters } from '../components/search/SearchFilters'
 
 export const Search = () => {
   return (
     <>
       <div
         style={{
-          // paddingLeft: '90px',
-          position: 'fixed',
-          height: '100vh',
+          paddingLeft: '82px',
+          height: '200vh',
           width: '100%',
           display: 'flex',
-          justifyContent: 'center',
           paddingTop: '1.8rem',
         }}
       >
-        <TextField
-          placeholder="Search"
-          variant="outlined"
-          sx={{ width: '40%' }}
-          autoComplete="off"
-        />
+        <SearchFilters />
       </div>
     </>
   )
