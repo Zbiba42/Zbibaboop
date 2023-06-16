@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { PrivateRoutesWrapper } from './PrivateRoutesWrapper'
 import { Home } from '../pages/Home'
 import { Login } from '../pages/Login'
+import { Search } from '../pages/Search'
 
 interface HandleProfileClickContextType {
   setAnimate: React.Dispatch<React.SetStateAction<string>>
@@ -22,6 +23,7 @@ export const AppRoutes = () => {
           <Route index path="/" element={<Login />} />
           <Route element={<PrivateRoutesWrapper />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/search" element={<Search />} />
           </Route>
         </Routes>
       </BrowserRouter>
