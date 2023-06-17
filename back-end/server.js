@@ -12,8 +12,11 @@ const { authToken } = require('./middlewares/AuthToken')
 
 const Auth = require('./Routes/Auth')
 const User = require('./Routes/user')
+const Search = require('./Routes/search')
 
 app.use('/api/auth', Auth)
+
+app.use('/api/search', authToken, Search)
 
 app.use('/api/user', authToken, User)
 
