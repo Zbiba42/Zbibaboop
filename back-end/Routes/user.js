@@ -1,12 +1,6 @@
 const router = require('express').Router()
 const { uploadMiddleware } = require('../middlewares/multerImages.js')
-const {
-  search,
-  getUser,
-  updateUser,
-} = require('../Controllers/userController.js')
-
-router.get('/search', search)
+const { getUser, updateUser } = require('../Controllers/userController.js')
 
 router.get('/getUser', getUser)
 
