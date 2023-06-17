@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
 import { NavBar } from '../components/NavBar'
 import { SideBar } from '../components/SideBar'
@@ -8,6 +8,7 @@ import { HandleProfileClickContext } from '../routes/AppRoutes'
 import { SearchInput } from '../components/search/SearchInput'
 
 export const PrivateRoutesWrapper = () => {
+  const location = useLocation()
   const token = sessionStorage.getItem('AccessToken')
   const isAuthenticated = token && !isTokenExpired(token)
   interface Token {
@@ -23,7 +24,7 @@ export const PrivateRoutesWrapper = () => {
     <>
       <SideBar />
       <NavBar />
-      <SearchInput />
+      {location.pathname === '/search' ? '' : <SearchInput />}
       {animateContext?.animate === 'open' ||
       animateContext?.animate === 'closing' ? (
         <Profile />
