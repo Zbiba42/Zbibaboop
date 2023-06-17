@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { motion, useAnimation, AnimationControls } from 'framer-motion'
 import { useContext } from 'react'
 import { HandleProfileClickContext } from '../../routes/AppRoutes'
-import { ProfileContent } from './ProfileContent'
+import { ProfileContent } from '../../components/Profile/ProfileContent'
 export const Profile = () => {
   const controls = useAnimation()
   const animateContext = useContext(HandleProfileClickContext)

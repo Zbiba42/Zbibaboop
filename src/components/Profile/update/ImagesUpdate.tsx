@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
-import { serverUrl } from '../../config'
+import { serverUrl } from '../../../config'
 interface Props {
   profile?: {
     CoverPath: string

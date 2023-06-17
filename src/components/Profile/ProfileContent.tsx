@@ -5,9 +5,9 @@ import jwtDecode from 'jwt-decode'
 import { serverUrl } from '../../config'
 import axios from 'axios'
 import { Box, Button, Tab, Tabs } from '@mui/material'
-import { TabPanel } from '../../components/Profile/TabContent'
-import { About } from '../../components/Profile/About'
-import { ProfileEdit } from '../../components/Profile/ProfileEdit'
+import { TabPanel } from './TabContent'
+import { About } from './tabs/About'
+import { ProfileEdit } from './update/ProfileEdit'
 
 interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>

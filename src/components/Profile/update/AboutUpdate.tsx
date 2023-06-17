@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { Button, TextField } from '@mui/material'
 import { ChangeEvent } from 'react'
 import axios from 'axios'
-import { profile } from '../../pages/Profile/ProfileContent'
+import { profile } from '../ProfileContent'
 interface CitySearchOption {
   value: string
   label: string
