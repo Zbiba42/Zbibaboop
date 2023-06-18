@@ -1,6 +1,11 @@
 const express = require('express')
+const http = require('http')
+const socketIO = require('socket.io')
+
 const app = express()
 const cors = require('cors')
+const server = http.createServer(app)
+
 app.use(cors())
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
@@ -20,6 +25,14 @@ app.use('/api/search', authToken, Search)
 
 app.use('/api/user', authToken, User)
 
-app.listen('5000', () => {
+const io = socketIO(server, {
+  cors: {
+    origin: '*',
+  },
+})
+
+require('./Sockets/socket')(io)
+
+server.listen('5000', () => {
   console.log('server is listening on port 5000')
 })
