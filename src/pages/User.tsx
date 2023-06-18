@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
-import jwtDecode from 'jwt-decode'
 import { serverUrl } from '../config'
 import axios from 'axios'
 import { Box, Button, Tab, Tabs } from '@mui/material'
 import { TabPanel } from '../components/Profile/TabContent'
 import { About } from '../components/Profile/tabs/About'
 import { useParams } from 'react-router-dom'
+import { io } from 'socket.io-client'
+import jwtDecode from 'jwt-decode'
 export interface profile {
+  _id: string
   CoverPath: string
   ProfilePath: string
   Fullname: string
@@ -33,6 +35,18 @@ export const User = () => {
       },
     })
     setProfile(data.data)
+  }
+  const addFriend = async () => {
+    const socket = io('http://localhost:5000/')
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken) {
+      const friendRequest = { sender: decodedToken.id, Receiver: profile?._id }
+      socket.emit('sendFriendReq', friendRequest)
+    }
   }
   useEffect(() => {
     getUser()
@@ -72,6 +86,7 @@ export const User = () => {
           variant="text"
           style={{ marginRight: '1rem' }}
           className="float-right"
+          onClick={addFriend}
         >
           <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Add Friend
         </Button>
