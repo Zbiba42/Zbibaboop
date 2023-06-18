@@ -4,6 +4,7 @@ import { PrivateRoutesWrapper } from './PrivateRoutesWrapper'
 import { Home } from '../pages/Home'
 import { Login } from '../pages/Login'
 import { Search } from '../pages/Search'
+import { User } from '../pages/User'
 
 interface HandleProfileClickContextType {
   setAnimate: React.Dispatch<React.SetStateAction<string>>
@@ -24,6 +25,7 @@ export const AppRoutes = () => {
           <Route element={<PrivateRoutesWrapper />}>
             <Route path="/home" element={<Home />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/user/:id" element={<User />} />
           </Route>
         </Routes>
       </BrowserRouter>
