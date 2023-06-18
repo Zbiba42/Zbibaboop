@@ -10,7 +10,11 @@ export const SearchInput = () => {
       sx={{ width: '40%', position: 'fixed', left: '25rem', top: '1.8rem' }}
       onKeyDown={(e: any) => {
         e.key == 'Enter' && e.target.value.trim() != ''
-          ? navigate(`/search?filter=all&search=${encodeURIComponent(e.target.value.trim())}`)
+          ? navigate(
+              `/search?filter=all&search=${encodeURIComponent(
+                e.target.value.trim()
+              )}`
+            )
           : ''
       }}
       autoComplete="off"

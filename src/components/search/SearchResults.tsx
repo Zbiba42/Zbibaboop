@@ -8,7 +8,7 @@ export const SearchResults = ({ results }: Props) => {
     <div
       style={{
         margin: '100px 20rem 0',
-        width: '60%',
+        width: '50%',
         height: '200vh',
         scrollBehavior: 'smooth',
       }}

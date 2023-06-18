@@ -6,6 +6,7 @@ import axios from 'axios'
 import { serverUrl } from '../config'
 import { SearchResults } from '../components/search/SearchResults'
 export interface User {
+  _id: string
   CoverPath: string
   ProfilePath: string
   Fullname: string
