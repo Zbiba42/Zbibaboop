@@ -7,7 +7,6 @@ interface Props {
   user: User
 }
 export const Profilemin = ({ user }: Props) => {
-  console.log(user)
   return (
     <Link to={'/user/' + user._id}>
       <div className="w-[100%] p-2 m-2 rounded-lg border flex flex-wrap cursor-pointer hover:bg-gray-100">
