@@ -90,7 +90,6 @@ const RefreshTokens = async (req, res) => {
         succes: false,
         data: err,
       })
-    console.log(user)
     try {
       await refreshToken.deleteOne({ Token: req.body.refreshToken })
     } catch (error) {
