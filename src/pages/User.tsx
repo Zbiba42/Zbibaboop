@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { SocketContext } from '../routes/PrivateRoutesWrapper'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import { serverUrl } from '../config'
 import axios from 'axios'
@@ -6,8 +7,8 @@ import { Box, Button, Tab, Tabs } from '@mui/material'
 import { TabPanel } from '../components/Profile/TabContent'
 import { About } from '../components/Profile/tabs/About'
 import { useParams } from 'react-router-dom'
-import { io } from 'socket.io-client'
 import jwtDecode from 'jwt-decode'
+import { toast } from 'react-toastify'
 export interface profile {
   _id: string
   CoverPath: string
@@ -22,6 +23,7 @@ export interface profile {
   HighSchool: string
 }
 export const User = () => {
+  const socket = useContext(SocketContext)
   const [profile, setProfile] = useState<profile>()
   const [value, setValue] = useState(0)
   const { id } = useParams()
@@ -37,15 +39,19 @@ export const User = () => {
     setProfile(data.data)
   }
   const addFriend = async () => {
-    const socket = io('http://localhost:5000/')
     const accessToken = sessionStorage.getItem('AccessToken')
     const decodedToken = accessToken
       ? jwtDecode<{ id: string }>(accessToken)
       : null
 
-    if (decodedToken) {
+    if (decodedToken && socket) {
       const friendRequest = { sender: decodedToken.id, Receiver: profile?._id }
-      socket.emit('sendFriendReq', friendRequest)
+      socket?.emit('sendFriendReq', friendRequest)
+      socket.on('FriendReqSent', (data) => {
+        if (data.succes) {
+          toast.success(data.data)
+        }
+      })
     }
   }
   useEffect(() => {
