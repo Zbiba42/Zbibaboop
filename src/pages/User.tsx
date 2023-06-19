@@ -26,6 +26,7 @@ export const User = () => {
   const socket = useContext(SocketContext)
   const [profile, setProfile] = useState<profile>()
   const [value, setValue] = useState(0)
+  const [relation, setRelation] = useState<string>()
   const { id } = useParams()
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -37,6 +38,19 @@ export const User = () => {
       },
     })
     setProfile(data.data)
+  }
+  const checkRelation = async () => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken && socket) {
+      const { data } = await axios.get(
+        serverUrl + `/api/user/getRelation?user1=${decodedToken.id}&user2=${id}`
+      )
+      setRelation(data.data)
+    }
   }
   const addFriend = async () => {
     const accessToken = sessionStorage.getItem('AccessToken')
@@ -54,6 +68,9 @@ export const User = () => {
       })
     }
   }
+  useEffect(() => {
+    checkRelation()
+  })
   useEffect(() => {
     getUser()
   }, [])
@@ -87,15 +104,38 @@ export const User = () => {
         <h1 className="mt-5 font-bold text-3xl text-[#272838] capitalize text-left ml-44">
           {profile?.Fullname}
         </h1>
-        <Button
-          color="inherit"
-          variant="text"
-          style={{ marginRight: '1rem' }}
-          className="float-right"
-          onClick={addFriend}
-        >
-          <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Add Friend
-        </Button>
+        {relation === 'already sent' ? (
+          <Button
+            color="inherit"
+            variant="text"
+            style={{ marginRight: '1rem' }}
+            className="float-right"
+          >
+            <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Cancel
+            request
+          </Button>
+        ) : relation === 'already Received' ? (
+          <Button
+            color="inherit"
+            variant="text"
+            style={{ marginRight: '1rem' }}
+            className="float-right"
+          >
+            <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Accept
+            Request
+          </Button>
+        ) : (
+          <Button
+            color="inherit"
+            variant="text"
+            style={{ marginRight: '1rem' }}
+            className="float-right"
+            onClick={addFriend}
+          >
+            <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Add friend
+          </Button>
+        )}
+
         <Tabs
           sx={{
             clear: 'both',
