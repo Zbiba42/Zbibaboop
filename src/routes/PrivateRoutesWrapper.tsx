@@ -3,12 +3,17 @@ import jwtDecode from 'jwt-decode'
 import { NavBar } from '../components/NavBar'
 import { SideBar } from '../components/SideBar'
 import { Profile } from '../pages/Profile'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { HandleProfileClickContext } from '../routes/AppRoutes'
 import { SearchInput } from '../components/search/SearchInput'
+import { Socket, io } from 'socket.io-client'
+import { createContext } from 'react'
+
+export const SocketContext = createContext<Socket | null>(null)
 
 export const PrivateRoutesWrapper = () => {
   const location = useLocation()
+  const [socket, setSocket] = useState<Socket | null>(null)
   const token = sessionStorage.getItem('AccessToken')
   const isAuthenticated = token && !isTokenExpired(token)
   interface Token {
@@ -20,18 +25,39 @@ export const PrivateRoutesWrapper = () => {
     return decodedToken.exp < currentTime
   }
   const animateContext = useContext(HandleProfileClickContext)
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken && socket == null) {
+      const socket = io('http://localhost:5000/', {
+        query: {
+          userId: decodedToken.id,
+        },
+      })
+      setSocket(socket)
+    }
+    return () => {
+      socket?.disconnect()
+    }
+  }, [])
+
   return isAuthenticated ? (
     <>
-      <SideBar />
-      <NavBar />
-      {location.pathname === '/search' ? '' : <SearchInput />}
-      {animateContext?.animate === 'open' ||
-      animateContext?.animate === 'closing' ? (
-        <Profile />
-      ) : (
-        ''
-      )}
-      <Outlet />
+      <SocketContext.Provider value={socket}>
+        <SideBar />
+        <NavBar />
+        {location.pathname === '/search' ? '' : <SearchInput />}
+        {animateContext?.animate === 'open' ||
+        animateContext?.animate === 'closing' ? (
+          <Profile />
+        ) : (
+          ''
+        )}
+        <Outlet />
+      </SocketContext.Provider>
     </>
   ) : (
     <Navigate to="/" />
