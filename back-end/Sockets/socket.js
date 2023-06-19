@@ -10,7 +10,11 @@ module.exports = (io) => {
         const friendRequest = await FriendReq.create(data)
         await User.updateOne(
           { _id: data.sender },
-          { $push: { friendRequests: friendRequest } }
+          { $push: { friendRequestsSent: friendRequest } }
+        )
+        await User.updateOne(
+          { _id: data.Receiver },
+          { $push: { friendRequestsReceived: friendRequest } }
         )
         io.to(data.sender).emit('FriendReqSent', {
           succes: true,
