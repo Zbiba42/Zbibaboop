@@ -13,6 +13,32 @@ const getUser = async (req, res) => {
   }
 }
 
+const checkUsersRelation = async (req, res) => {
+  const user1 = await User.findOne({ _id: req.query.user1 }).populate([
+    'friendRequestsSent',
+    'friendRequestsReceived',
+  ])
+  const user2 = req.query.user2
+  const alreadySent = user1.friendRequestsSent.some(
+    (request) => request.Receiver.toString() === user2
+  )
+  const alreadyReceived = user1.friendRequestsReceived.some(
+    (request) => request.sender.toString() === user2
+  )
+  if (user1.friends.includes(user2)) {
+    res.status(200).json({ succes: true, data: 'friends' })
+  } else {
+    console.log('makaynch f firends')
+  }
+
+  if (alreadySent) {
+    res.status(200).json({ succes: true, data: 'already sent' })
+  }
+  if (alreadyReceived) {
+    res.status(200).json({ succes: true, data: 'already Received' })
+  }
+}
+
 const updateUser = async (req, res) => {
   try {
     const userId = req.body.id
@@ -32,4 +58,4 @@ const updateUser = async (req, res) => {
   }
 }
 
-module.exports = { getUser, updateUser }
+module.exports = { getUser, updateUser, checkUsersRelation }
