@@ -45,7 +45,7 @@ export const User = () => {
       ? jwtDecode<{ id: string }>(accessToken)
       : null
 
-    if (decodedToken && socket) {
+    if (decodedToken) {
       const { data } = await axios.get(
         serverUrl + `/api/user/getRelation?user1=${decodedToken.id}&user2=${id}`
       )
@@ -64,14 +64,14 @@ export const User = () => {
       socket.on('FriendReqSent', (data) => {
         if (data.succes) {
           toast.success(data.data)
+          setRelation('already sent')
         }
       })
     }
   }
+
   useEffect(() => {
     checkRelation()
-  })
-  useEffect(() => {
     getUser()
   }, [])
   return (
