@@ -6,7 +6,6 @@ module.exports = (io) => {
     socket.join(userId)
     socket.on('sendFriendReq', async (data) => {
       try {
-        io.to(data.Receiver).emit('testNotif', 'hey')
         const friendRequest = await FriendReq.create(data)
         await User.updateOne(
           { _id: data.sender },
@@ -16,6 +15,7 @@ module.exports = (io) => {
           { _id: data.Receiver },
           { $push: { friendRequestsReceived: friendRequest } }
         )
+        io.to(data.Receiver).emit('friend Request', friendRequest)
         io.to(data.sender).emit('FriendReqSent', {
           succes: true,
           data: 'friend request was sent !',
