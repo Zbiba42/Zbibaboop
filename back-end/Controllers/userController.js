@@ -1,5 +1,5 @@
 const User = require('../models/user')
-
+const FriendRequest = require('../models/friendRequest')
 const getUser = async (req, res) => {
   try {
     const id = req.query.id
@@ -14,29 +14,26 @@ const getUser = async (req, res) => {
 }
 
 const checkUsersRelation = async (req, res) => {
-  const user1 = await User.findOne({ _id: req.query.user1 }).populate([
-    'friendRequestsSent',
-    'friendRequestsReceived',
-  ])
+  const user1 = await User.findOne({ _id: req.query.user1 }).lean()
   const user2 = req.query.user2
-  const alreadySent = user1.friendRequestsSent.some(
-    (request) => request.Receiver.toString() === user2
-  )
-  const alreadyReceived = user1.friendRequestsReceived.some(
-    (request) => request.sender.toString() === user2
-  )
-  if (user1.friends.includes(user2)) {
-    res.status(200).json({ succes: true, data: 'friends' })
-  } else {
-    console.log('makaynch f firends')
-  }
+  const alreadySent = await FriendRequest.exists({
+    sender: user1._id,
+    Receiver: user2,
+  })
+  const alreadyReceived = await FriendRequest.exists({
+    sender: user2,
+    Receiver: user1._id,
+  })
 
   if (alreadySent) {
     res.status(200).json({ succes: true, data: 'already sent' })
+    return
   }
   if (alreadyReceived) {
     res.status(200).json({ succes: true, data: 'already Received' })
+    return
   }
+  res.status(200).json({ succes: true, data: 'none' })
 }
 
 const updateUser = async (req, res) => {
