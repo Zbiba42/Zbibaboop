@@ -1,15 +1,32 @@
-import { Box } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Divider,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from '@mui/material'
+import PersonAdd from '@mui/icons-material/PersonAdd'
+import Settings from '@mui/icons-material/Settings'
+import Logout from '@mui/icons-material/Logout'
 import jwtDecode from 'jwt-decode'
 import { NavBox } from '../styles/navStyle'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Badge, { BadgeProps } from '@mui/material/Badge'
 import { styled } from '@mui/material/styles'
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { HandleProfileClickContext } from '../routes/AppRoutes'
 import { serverUrl } from '../config'
 import axios from 'axios'
+import { SocketContext } from '../routes/PrivateRoutesWrapper'
+import { toast } from 'react-toastify'
+
 export const NavBar = () => {
+  const socket = useContext(SocketContext)
+  const navigate = useNavigate()
+  const [notifCount, setNotifCount] = useState<number>(0)
   const [profile, setProfile] = useState('')
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const animateContext = useContext(HandleProfileClickContext)
   const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -19,6 +36,13 @@ export const NavBar = () => {
       padding: '0 4px',
     },
   }))
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
   const getUser = async () => {
     const accessToken = sessionStorage.getItem('AccessToken')
     const decodedToken = accessToken
@@ -35,6 +59,21 @@ export const NavBar = () => {
       setProfile(serverUrl + data.data.ProfilePath)
     }
   }
+  const logout = () => {
+    sessionStorage.removeItem('AccessToken')
+    sessionStorage.removeItem('RefreshToken')
+    navigate('/')
+    toast.info('logged off succesfully')
+  }
+  useEffect(() => {
+    console.log('started')
+    if (socket) {
+      socket?.on('friend Request', (data) => {
+        console.log(data)
+        setNotifCount((old) => old + 1)
+      })
+    }
+  }, [socket])
   useEffect(() => {
     getUser()
   }, [animateContext])
@@ -49,7 +88,7 @@ export const NavBar = () => {
         component={Link}
         to={'/'}
       >
-        <StyledBadge badgeContent={1} color="info">
+        <StyledBadge badgeContent={notifCount} color="info">
           <i className="fa-regular fa-message text-xl m-1"></i>
         </StyledBadge>
         <h4>Messages</h4>
@@ -64,7 +103,7 @@ export const NavBar = () => {
         component={Link}
         to={'/'}
       >
-        <StyledBadge badgeContent={0} color="info">
+        <StyledBadge badgeContent={notifCount} color="info">
           <i className="fa-regular fa-bell text-xl m-1"></i>
         </StyledBadge>
         <h4>Notifications</h4>
@@ -72,15 +111,79 @@ export const NavBar = () => {
 
       <Box
         sx={{ width: '33%', paddingTop: 0.5, cursor: 'pointer' }}
-        onClick={() => animateContext?.setAnimate('open')}
+        onClick={handleClick}
       >
         <img
           className=" rounded-full  w-9 h-9 m-auto object-cover"
           src={profile}
           alt=""
         />
-        <h4>My Profile</h4>
+        <h4>Profile</h4>
       </Box>
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: 1.5,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <MenuItem
+          onClick={() => {
+            animateContext?.setAnimate('open')
+            handleClose()
+          }}
+        >
+          <img
+            className=" rounded-full  w-9 h-9 mr-2 object-cover"
+            src={profile}
+            alt=""
+          />{' '}
+          My Profile
+        </MenuItem>
+
+        <Divider />
+
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <Settings fontSize="small" />
+          </ListItemIcon>
+          Settings
+        </MenuItem>
+        <MenuItem onClick={logout}>
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
     </Box>
   )
 }
