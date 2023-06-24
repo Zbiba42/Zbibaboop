@@ -18,6 +18,7 @@ export const NavBar = () => {
   const socket = useContext(SocketContext)
   const navigate = useNavigate()
   const [notifCount, setNotifCount] = useState<number>(0)
+  const [notifications, setNotifications] = useState([])
   const [profile, setProfile] = useState('')
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null)
@@ -61,6 +62,22 @@ export const NavBar = () => {
       setProfile(serverUrl + data.data.ProfilePath)
     }
   }
+  const getNotifs = async () => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken) {
+      const { data } = await axios.get(serverUrl + '/api/user/getNotifs', {
+        params: {
+          id: decodedToken.id,
+        },
+      })
+      setNotifications(data.data)
+      setNotifCount(data.data.length)
+    }
+  }
   const logout = () => {
     sessionStorage.removeItem('AccessToken')
     sessionStorage.removeItem('RefreshToken')
@@ -68,11 +85,20 @@ export const NavBar = () => {
     toast.info('logged off succesfully')
   }
   useEffect(() => {
-    console.log('started')
+    getNotifs()
+  }, [])
+
+  useEffect(() => {
     if (socket) {
-      socket?.on('friend Request', (data) => {
+      socket?.on('notification', (data) => {
         console.log(data)
         setNotifCount((old) => old + 1)
+      })
+      socket.on('cancelNotif', (data) => {
+        console.log(data)
+        if (data.status === 'unread') {
+          setNotifCount((old) => old - 1)
+        }
       })
     }
   }, [socket])
