@@ -19,7 +19,15 @@ export const NavBar = () => {
   const socket = useContext(SocketContext)
   const navigate = useNavigate()
   const [notifCount, setNotifCount] = useState<number>(0)
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications] = useState<
+    Array<{
+      sender: String
+      receiver: String
+      type: String
+      content: { sender: String; Receiver: String; status: String }
+      status: String
+    }>
+  >([])
   const [profile, setProfile] = useState('')
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null)
@@ -91,15 +99,11 @@ export const NavBar = () => {
 
   useEffect(() => {
     if (socket) {
-      socket?.on('notification', (data) => {
-        console.log(data)
-        setNotifCount((old) => old + 1)
+      socket?.on('notification', () => {
+        getNotifs()
       })
-      socket.on('cancelNotif', (data) => {
-        console.log(data)
-        if (data.status === 'unread') {
-          setNotifCount((old) => old - 1)
-        }
+      socket.on('cancelNotif', () => {
+        getNotifs()
       })
     }
   }, [socket])
