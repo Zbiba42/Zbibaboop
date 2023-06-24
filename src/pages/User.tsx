@@ -63,8 +63,31 @@ export const User = () => {
       socket?.emit('sendFriendReq', friendRequest)
       socket.on('FriendReqSent', (data) => {
         if (data.succes) {
-          toast.success(data.data)
+          toast.success(data.data, {
+            toastId: 'sent',
+          })
+          console.log('ahiya')
           setRelation('already sent')
+        }
+      })
+    }
+  }
+  const cancelReq = async () => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken && socket) {
+      const friendRequest = { sender: decodedToken.id, Receiver: profile?._id }
+      socket?.emit('cancelFriendReq', friendRequest)
+      socket.on('FriendReqCanceled', (data) => {
+        if (data.succes) {
+          toast.success(data.data, {
+            toastId: 'cancel',
+          })
+          console.log('machafk 7ed')
+          setRelation('none')
         }
       })
     }
@@ -110,6 +133,7 @@ export const User = () => {
             variant="text"
             style={{ marginRight: '1rem' }}
             className="float-right"
+            onClick={cancelReq}
           >
             <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Cancel
             request
