@@ -117,7 +117,7 @@ export const NavBar = () => {
         component={Link}
         to={'/'}
       >
-        <StyledBadge badgeContent={notifCount} color="info">
+        <StyledBadge badgeContent={0} color="info">
           <i className="fa-regular fa-message text-xl m-1"></i>
         </StyledBadge>
         <h4>Messages</h4>
@@ -146,12 +146,13 @@ export const NavBar = () => {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            overflow: 'scroll',
+            filter: 'drop-shadow(0px 2px 5px rgba(0,0,0,0.32))',
             mt: 1.5,
-            padding: 1,
+            padding: '10px',
             width: '310px',
-            height: '500px',
+            minHeight: '100px',
+            maxHeight: '500xp',
             '& .MuiAvatar-root': {
               width: 32,
               height: 32,
