@@ -1,5 +1,15 @@
 const mongoose = require('mongoose')
 const NotificationSchema = new mongoose.Schema({
+  sender: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   type: {
     type: String,
     required: true,
@@ -11,7 +21,7 @@ const NotificationSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['read', 'unread'],
-    default: 'read',
+    default: 'unread',
   },
 })
 
