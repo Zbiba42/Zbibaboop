@@ -3,12 +3,28 @@ const FriendRequest = require('../models/friendRequest')
 const getUser = async (req, res) => {
   try {
     const id = req.query.id
-    const user = await User.findOne(
+    let query = User.findOne(
       { _id: id },
-      { Verified: 0, Password: 0, friendRequests: 0 }
+      {
+        Email: 0,
+        Verified: 0,
+        Password: 0,
+        friendRequestsReceived: 0,
+        friendRequestsSent: 0,
+        notifications: 0,
+      }
     )
+    if (id === req.payload.id) {
+      query = User.findOne({ _id: id }, { Verified: 0, Password: 0 }).populate(
+        'notifications'
+      )
+    }
+
+    const user = await query
+
     res.status(200).json({ succes: true, data: user })
   } catch (error) {
+    console.log(error)
     res.status(400).json({ succes: false, error: error.message })
   }
 }
