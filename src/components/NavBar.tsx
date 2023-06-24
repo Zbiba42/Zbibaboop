@@ -13,6 +13,7 @@ import { serverUrl } from '../config'
 import axios from 'axios'
 import { SocketContext } from '../routes/PrivateRoutesWrapper'
 import { toast } from 'react-toastify'
+import { Notification } from './navBar/notification'
 
 export const NavBar = () => {
   const socket = useContext(SocketContext)
@@ -142,13 +143,15 @@ export const NavBar = () => {
         id="notif-menu"
         open={open2}
         onClose={handleClose2}
-        onClick={handleClose2}
         PaperProps={{
           elevation: 0,
           sx: {
             overflow: 'visible',
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,
+            padding: 1,
+            width: '310px',
+            height: '500px',
             '& .MuiAvatar-root': {
               width: 32,
               height: 32,
@@ -172,9 +175,9 @@ export const NavBar = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>
-          <h3>test</h3>
-        </MenuItem>
+        {notifications.map((notif) => {
+          return <Notification notif={notif} />
+        })}
       </Menu>
 
       <Box
