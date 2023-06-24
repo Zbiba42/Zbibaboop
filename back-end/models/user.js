@@ -76,6 +76,12 @@ const UserSchema = new mongoose.Schema({
       ref: 'FriendRequest',
     },
   ],
+  notifications: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Notification',
+    },
+  ],
 })
 
 module.exports = mongoose.model('User', UserSchema)
