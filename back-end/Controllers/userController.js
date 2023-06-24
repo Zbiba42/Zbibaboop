@@ -71,4 +71,22 @@ const updateUser = async (req, res) => {
   }
 }
 
-module.exports = { getUser, updateUser, checkUsersRelation }
+const getNotifications = async (req, res) => {
+  const id = req.query.id
+  try {
+    const { notifications } = await User.findOne(
+      { _id: id },
+      {
+        notifications: 1,
+      }
+    ).populate({
+      path: 'notifications',
+      match: { status: 'unread' },
+    })
+    console.log(notifications)
+    res.status(200).json({ succes: true, data: notifications })
+  } catch (error) {
+    res.status(400).json({ succes: false, data: error })
+  }
+}
+module.exports = { getUser, updateUser, checkUsersRelation, getNotifications }
