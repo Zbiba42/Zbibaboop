@@ -1,12 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Divider,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-} from '@mui/material'
-import PersonAdd from '@mui/icons-material/PersonAdd'
+import { Box, Divider, ListItemIcon, Menu, MenuItem } from '@mui/material'
+
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
 import jwtDecode from 'jwt-decode'
@@ -27,6 +20,8 @@ export const NavBar = () => {
   const [notifCount, setNotifCount] = useState<number>(0)
   const [profile, setProfile] = useState('')
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null)
+
   const animateContext = useContext(HandleProfileClickContext)
   const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -42,6 +37,13 @@ export const NavBar = () => {
   }
   const handleClose = () => {
     setAnchorEl(null)
+  }
+  const open2 = Boolean(anchorEl2)
+  const handleClick2 = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl2(event.currentTarget)
+  }
+  const handleClose2 = () => {
+    setAnchorEl2(null)
   }
   const getUser = async () => {
     const accessToken = sessionStorage.getItem('AccessToken')
@@ -101,13 +103,53 @@ export const NavBar = () => {
           paddingTop: 0.5,
         }}
         component={Link}
-        to={'/'}
+        onClick={handleClick2}
       >
         <StyledBadge badgeContent={notifCount} color="info">
           <i className="fa-regular fa-bell text-xl m-1"></i>
         </StyledBadge>
         <h4>Notifications</h4>
       </Box>
+
+      <Menu
+        anchorEl={anchorEl2}
+        id="notif-menu"
+        open={open2}
+        onClose={handleClose2}
+        onClick={handleClose2}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: 1.5,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <MenuItem>
+          <h3>test</h3>
+        </MenuItem>
+      </Menu>
 
       <Box
         sx={{ width: '33%', paddingTop: 0.5, cursor: 'pointer' }}
