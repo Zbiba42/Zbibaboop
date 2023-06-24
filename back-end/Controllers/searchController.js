@@ -10,7 +10,14 @@ const search = async (req, res) => {
       {
         Fullname: { $regex: query, $options: 'i' },
       },
-      { Verified: 0, Password: 0, friendRequests: 0 }
+      {
+        Email: 0,
+        Verified: 0,
+        Password: 0,
+        friendRequestsReceived: 0,
+        friendRequestsSent: 0,
+        notifications: 0,
+      }
     )
       .skip(skip)
       .limit(limit)
