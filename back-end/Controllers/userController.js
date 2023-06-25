@@ -30,23 +30,29 @@ const getUser = async (req, res) => {
 }
 
 const checkUsersRelation = async (req, res) => {
-  const user1 = await User.findOne({ _id: req.query.user1 }).lean()
+  const user1 = req.query.user1
   const user2 = req.query.user2
+
   const alreadySent = await FriendRequest.exists({
-    sender: user1._id,
+    sender: user1,
     Receiver: user2,
   })
   const alreadyReceived = await FriendRequest.exists({
     sender: user2,
-    Receiver: user1._id,
+    Receiver: user1,
   })
-
+  const user = await User.findOne({ _id: user1, friends: { $in: [user2] } })
+  const isFriends = user !== null
   if (alreadySent) {
     res.status(200).json({ succes: true, data: 'already sent' })
     return
   }
   if (alreadyReceived) {
     res.status(200).json({ succes: true, data: 'already Received' })
+    return
+  }
+  if (isFriends) {
+    res.status(200).json({ succes: true, data: 'friends' })
     return
   }
   res.status(200).json({ succes: true, data: 'none' })
@@ -83,7 +89,6 @@ const getNotifications = async (req, res) => {
       path: 'notifications',
       match: { status: 'unread' },
     })
-    console.log(notifications)
     res.status(200).json({ succes: true, data: notifications })
   } catch (error) {
     res.status(400).json({ succes: false, data: error })
