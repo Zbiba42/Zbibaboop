@@ -66,7 +66,6 @@ export const User = () => {
           toast.success(data.data, {
             toastId: 'sent',
           })
-          console.log('ahiya')
           setRelation('already sent')
         }
       })
@@ -86,7 +85,6 @@ export const User = () => {
           toast.success(data.data, {
             toastId: 'cancel',
           })
-          console.log('machafk 7ed')
           setRelation('none')
         }
       })
@@ -94,6 +92,14 @@ export const User = () => {
   }
 
   useEffect(() => {
+    socket?.on('friendReqAcceptedSuccess', (data) => {
+      if (data.succes) {
+        setRelation('friends')
+      }
+    })
+    socket?.on('friendReqAccepted', () => {
+      setRelation('friends')
+    })
     checkRelation()
     getUser()
   }, [])
@@ -147,6 +153,15 @@ export const User = () => {
           >
             <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Accept
             Request
+          </Button>
+        ) : relation === 'friends' ? (
+          <Button
+            color="inherit"
+            variant="text"
+            style={{ marginRight: '1rem' }}
+            className="float-right"
+          >
+            Send Message
           </Button>
         ) : (
           <Button
