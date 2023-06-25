@@ -1,6 +1,8 @@
 import { useEffect, useState, useContext } from 'react'
 import { SocketContext } from '../routes/PrivateRoutesWrapper'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
 import { serverUrl } from '../config'
 import axios from 'axios'
 import { Box, Button, Tab, Tabs } from '@mui/material'
@@ -137,41 +139,68 @@ export const User = () => {
           <Button
             color="inherit"
             variant="text"
-            style={{ marginRight: '1rem' }}
+            style={{
+              marginRight: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+            }}
             className="float-right"
             onClick={cancelReq}
           >
-            <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Cancel
-            request
+            Cancel request
+            <i className="fa-solid fa-user-xmark fa-lg ml-1"></i>
           </Button>
         ) : relation === 'already Received' ? (
           <Button
             color="inherit"
             variant="text"
-            style={{ marginRight: '1rem' }}
+            style={{
+              marginRight: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+            }}
             className="float-right"
           >
-            <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Accept
-            Request
+            Accept Request
+            <i className="fa-solid fa-user-check fa-lg ml-1 "></i>
           </Button>
         ) : relation === 'friends' ? (
-          <Button
-            color="inherit"
-            variant="text"
-            style={{ marginRight: '1rem' }}
-            className="float-right"
-          >
-            Send Message
-          </Button>
+          <>
+            <Button
+              color="inherit"
+              variant="text"
+              style={{
+                marginRight: '1rem',
+              }}
+              endIcon={<PersonRemoveIcon fontSize="small" />}
+              className="float-right"
+            >
+              Remove Friend
+            </Button>
+            <Button
+              color="inherit"
+              variant="text"
+              style={{
+                marginRight: '0.5rem',
+              }}
+              endIcon={<ChatBubbleIcon fontSize="small" />}
+              className="float-right"
+            >
+              Send Message
+            </Button>
+          </>
         ) : (
           <Button
             color="inherit"
             variant="text"
-            style={{ marginRight: '1rem' }}
+            style={{
+              marginRight: '1rem',
+            }}
+            endIcon={<PersonAddAlt1Icon fontSize="small" />}
             className="float-right"
             onClick={addFriend}
           >
-            <PersonAddAlt1Icon fontSize="small" className="mr-1" /> Add friend
+            Add friend
           </Button>
         )}
 
