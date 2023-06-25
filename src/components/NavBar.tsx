@@ -105,6 +105,9 @@ export const NavBar = () => {
       socket.on('cancelNotif', () => {
         getNotifs()
       })
+      socket.on('friendReqAccepted', () => {
+        getNotifs()
+      })
     }
   }, [socket])
   useEffect(() => {
@@ -181,9 +184,17 @@ export const NavBar = () => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <div className="overflow-y-scroll max-h-[500px] p-2 w-full notifications">
-          {notifications.map((notif) => {
-            return <Notification notif={notif} />
-          })}
+          {notifications.length > 0 ? (
+            notifications.map((notif) => {
+              return <Notification getNotifs={getNotifs} notif={notif} />
+            })
+          ) : (
+            <div className="p-2 w-full h-full flex justify-center items-center">
+              <p className="text-sm font-medium leading-5 text-gray-900 m-1">
+                you dont have any notifications !
+              </p>
+            </div>
+          )}
         </div>
       </Menu>
 
