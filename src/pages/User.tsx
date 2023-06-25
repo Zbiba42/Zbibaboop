@@ -171,11 +171,13 @@ export const User = () => {
               variant="text"
               style={{
                 marginRight: '1rem',
+                display: 'flex',
+                alignItems: 'center',
               }}
-              endIcon={<PersonRemoveIcon fontSize="small" />}
               className="float-right"
             >
               Remove Friend
+              <i className="fa-solid fa-user-xmark fa-lg ml-1"></i>
             </Button>
             <Button
               color="inherit"
