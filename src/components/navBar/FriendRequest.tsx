@@ -31,6 +31,17 @@ export const FriendRequest = ({ notif, sender, getNotifs }: Props) => {
       }
     })
   }
+  const declineFriend = () => {
+    socket?.emit('declineFriendReq', notif)
+    socket?.on('friendReqDeclinedSuccess', (data) => {
+      if (data.succes) {
+        toast.success(data.data + sender?.Fullname, {
+          toastId: 'friendReqDecline',
+        })
+        getNotifs()
+      }
+    })
+  }
   return (
     <div className="w-full mb-3 bg-white shadow-sm outline outline-1 outline-gray-200  rounded-lg pointer-events-auto">
       <div className="p-2">
@@ -51,7 +62,10 @@ export const FriendRequest = ({ notif, sender, getNotifs }: Props) => {
               >
                 Accept
               </button>
-              <button className="px-3 py-1 text-gray-800 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:bg-gray-300">
+              <button
+                className="px-3 py-1 text-gray-800 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:bg-gray-300"
+                onClick={declineFriend}
+              >
                 Decline
               </button>
             </div>
