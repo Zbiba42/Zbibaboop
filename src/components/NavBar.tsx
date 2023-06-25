@@ -13,7 +13,7 @@ import { serverUrl } from '../config'
 import axios from 'axios'
 import { SocketContext } from '../routes/PrivateRoutesWrapper'
 import { toast } from 'react-toastify'
-import { Notification } from './navBar/notification'
+import { Notification } from './navBar/Notification'
 
 export const NavBar = () => {
   const socket = useContext(SocketContext)
@@ -150,10 +150,10 @@ export const NavBar = () => {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'scroll',
+            overflow: 'visible',
             filter: 'drop-shadow(0px 2px 5px rgba(0,0,0,0.32))',
             mt: 1.5,
-            padding: '10px',
+            position: 'fixed',
             width: '310px',
             minHeight: '100px',
             maxHeight: '500xp',
@@ -180,9 +180,11 @@ export const NavBar = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {notifications.map((notif) => {
-          return <Notification notif={notif} />
-        })}
+        <div className="overflow-y-scroll max-h-[500px] p-2 w-full notifications">
+          {notifications.map((notif) => {
+            return <Notification notif={notif} />
+          })}
+        </div>
       </Menu>
 
       <Box
