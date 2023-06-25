@@ -134,4 +134,51 @@ const acceptFriendReq = async (io, data) => {
   }
 }
 
-module.exports = { sendFriendReq, cancelFriendReq, acceptFriendReq }
+const declineFriendReq = async (io, data) => {
+  try {
+    const friendRequest = await FriendReq.findOne(data.content)
+    const notifquery = {
+      type: 'friend request',
+      sender: data.sender,
+      receiver: data.receiver,
+    }
+    const notification = await Notification.findOne(notifquery)
+    // remove the friend requsets for them both
+    await User.updateOne(
+      { _id: data.sender },
+      {
+        $pull: {
+          friendRequestsSent: friendRequest.id,
+        },
+      }
+    )
+    // remove the notification as well for the recevier
+    await User.updateOne(
+      { _id: data.receiver },
+      {
+        $pull: {
+          friendRequestsReceived: friendRequest.id,
+          notifications: notification.id,
+        },
+      }
+    )
+    // delete the notif and friend request in the end
+    await Notification.deleteOne(notifquery)
+    await FriendReq.deleteOne(data.content)
+    // send notifs for the receiver
+    io.to(data.receiver).emit('friendReqDeclinedSuccess', {
+      succes: true,
+      data: 'you diclined friend request from ',
+      id: data.sender,
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+module.exports = {
+  sendFriendReq,
+  cancelFriendReq,
+  acceptFriendReq,
+  declineFriendReq,
+}

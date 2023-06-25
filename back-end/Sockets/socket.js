@@ -1,4 +1,9 @@
-const { sendFriendReq, cancelFriendReq, acceptFriendReq } = require('./events')
+const {
+  sendFriendReq,
+  cancelFriendReq,
+  acceptFriendReq,
+  declineFriendReq,
+} = require('./events')
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -12,6 +17,9 @@ module.exports = (io) => {
     })
     socket.on('acceptFriendReq', (data) => {
       acceptFriendReq(io, data)
+    })
+    socket.on('declineFriendReq', (data) => {
+      declineFriendReq(io, data)
     })
     socket.on('disconnect', () => {
       console.log('disconected')
