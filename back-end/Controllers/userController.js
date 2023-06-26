@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const FriendRequest = require('../models/friendRequest')
+const Notification = require('../models/notification')
 const getUser = async (req, res) => {
   try {
     const id = req.query.id
@@ -87,11 +88,45 @@ const getNotifications = async (req, res) => {
       }
     ).populate({
       path: 'notifications',
-      match: { status: 'unread' },
     })
     res.status(200).json({ succes: true, data: notifications })
   } catch (error) {
     res.status(400).json({ succes: false, data: error })
   }
 }
-module.exports = { getUser, updateUser, checkUsersRelation, getNotifications }
+
+const readNtofication = async (req, res) => {
+  const { _id } = req.body.notif
+  try {
+    await Notification.updateOne({ _id: _id }, { status: 'read' })
+    res
+      .status(200)
+      .json({ succes: true, data: 'notification read succesfully' })
+  } catch (error) {
+    res.status(400).json({ succes: false, data: error })
+  }
+}
+
+const removeNtofication = async (req, res) => {
+  const { _id } = req.body.notif
+  try {
+    await User.updateOne(
+      { _id: req.payload.id },
+      { $pull: { notifications: _id } }
+    )
+    await Notification.deleteOne({ _id: id })
+    res
+      .status(200)
+      .json({ succes: true, data: 'notification removed succesfully' })
+  } catch (error) {
+    res.status(400).json({ succes: false, data: error })
+  }
+}
+module.exports = {
+  getUser,
+  updateUser,
+  checkUsersRelation,
+  getNotifications,
+  readNtofication,
+  removeNtofication,
+}
