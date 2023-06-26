@@ -1,16 +1,13 @@
 import { useEffect, useState, useContext } from 'react'
 import { SocketContext } from '../routes/PrivateRoutesWrapper'
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
 import { serverUrl } from '../config'
 import axios from 'axios'
-import { Box, Button, Tab, Tabs } from '@mui/material'
+import { Box, Tab, Tabs } from '@mui/material'
 import { TabPanel } from '../components/Profile/TabContent'
 import { About } from '../components/Profile/tabs/About'
 import { useParams } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
-import { toast } from 'react-toastify'
+import { RelationButtons } from '../components/Profile/RelationButtons'
 export interface profile {
   _id: string
   CoverPath: string
@@ -54,44 +51,6 @@ export const User = () => {
       setRelation(data.data)
     }
   }
-  const addFriend = async () => {
-    const accessToken = sessionStorage.getItem('AccessToken')
-    const decodedToken = accessToken
-      ? jwtDecode<{ id: string }>(accessToken)
-      : null
-
-    if (decodedToken && socket) {
-      const friendRequest = { sender: decodedToken.id, Receiver: profile?._id }
-      socket?.emit('sendFriendReq', friendRequest)
-      socket.on('FriendReqSent', (data) => {
-        if (data.succes) {
-          toast.success(data.data, {
-            toastId: 'sent',
-          })
-          setRelation('already sent')
-        }
-      })
-    }
-  }
-  const cancelReq = async () => {
-    const accessToken = sessionStorage.getItem('AccessToken')
-    const decodedToken = accessToken
-      ? jwtDecode<{ id: string }>(accessToken)
-      : null
-
-    if (decodedToken && socket) {
-      const friendRequest = { sender: decodedToken.id, Receiver: profile?._id }
-      socket?.emit('cancelFriendReq', friendRequest)
-      socket.on('FriendReqCanceled', (data) => {
-        if (data.succes) {
-          toast.success(data.data, {
-            toastId: 'cancel',
-          })
-          setRelation('none')
-        }
-      })
-    }
-  }
 
   useEffect(() => {
     socket?.on('friendReqAcceptedSuccess', (data) => {
@@ -104,7 +63,7 @@ export const User = () => {
     })
     checkRelation()
     getUser()
-  }, [])
+  }, [id])
   return (
     <div
       style={{
@@ -135,76 +94,13 @@ export const User = () => {
         <h1 className="mt-5 font-bold text-3xl text-[#272838] capitalize text-left ml-44">
           {profile?.Fullname}
         </h1>
-        {relation === 'already sent' ? (
-          <Button
-            color="inherit"
-            variant="text"
-            style={{
-              marginRight: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            className="float-right"
-            onClick={cancelReq}
-          >
-            Cancel request
-            <i className="fa-solid fa-user-xmark fa-lg ml-1"></i>
-          </Button>
-        ) : relation === 'already Received' ? (
-          <Button
-            color="inherit"
-            variant="text"
-            style={{
-              marginRight: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            className="float-right"
-          >
-            Accept Request
-            <i className="fa-solid fa-user-check fa-lg ml-1 "></i>
-          </Button>
-        ) : relation === 'friends' ? (
-          <>
-            <Button
-              color="inherit"
-              variant="text"
-              style={{
-                marginRight: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-              className="float-right"
-            >
-              Remove Friend
-              <i className="fa-solid fa-user-xmark fa-lg ml-1"></i>
-            </Button>
-            <Button
-              color="inherit"
-              variant="text"
-              style={{
-                marginRight: '0.5rem',
-              }}
-              endIcon={<ChatBubbleIcon fontSize="small" />}
-              className="float-right"
-            >
-              Send Message
-            </Button>
-          </>
-        ) : (
-          <Button
-            color="inherit"
-            variant="text"
-            style={{
-              marginRight: '1rem',
-            }}
-            endIcon={<PersonAddAlt1Icon fontSize="small" />}
-            className="float-right"
-            onClick={addFriend}
-          >
-            Add friend
-          </Button>
-        )}
+
+        <RelationButtons
+          socket={socket}
+          profile={profile}
+          relation={relation}
+          setRelation={setRelation}
+        />
 
         <Tabs
           sx={{
