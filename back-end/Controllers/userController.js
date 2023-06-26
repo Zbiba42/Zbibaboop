@@ -114,7 +114,7 @@ const removeNtofication = async (req, res) => {
       { _id: req.payload.id },
       { $pull: { notifications: _id } }
     )
-    await Notification.deleteOne({ _id: id })
+    await Notification.deleteOne({ _id: _id })
     res
       .status(200)
       .json({ succes: true, data: 'notification removed succesfully' })
