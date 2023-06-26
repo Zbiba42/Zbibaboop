@@ -83,8 +83,11 @@ export const NavBar = () => {
           id: decodedToken.id,
         },
       })
-      setNotifications(data.data)
-      setNotifCount(data.data.length)
+      setNotifications(data.data.reverse())
+      const unreadCount = data.data.filter(
+        (notif: { status: string }) => notif.status === 'unread'
+      ).length
+      setNotifCount(unreadCount)
     }
   }
   const logout = () => {
