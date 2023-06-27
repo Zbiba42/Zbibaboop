@@ -14,7 +14,10 @@ const getUser = async (req, res) => {
         friendRequestsSent: 0,
         notifications: 0,
       }
-    )
+    ).populate({
+      path: 'friends',
+      select: 'ProfilePath Fullname City Country',
+    })
     if (id === req.payload.id) {
       query = User.findOne({ _id: id }, { Verified: 0, Password: 0 }).populate({
         path: 'friends',
