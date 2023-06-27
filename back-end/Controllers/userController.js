@@ -16,13 +16,13 @@ const getUser = async (req, res) => {
       }
     )
     if (id === req.payload.id) {
-      query = User.findOne({ _id: id }, { Verified: 0, Password: 0 }).populate(
-        'notifications'
-      )
+      query = User.findOne({ _id: id }, { Verified: 0, Password: 0 }).populate({
+        path: 'friends',
+        select: 'ProfilePath Fullname City Country',
+      })
     }
 
     const user = await query
-
     res.status(200).json({ succes: true, data: user })
   } catch (error) {
     console.log(error)
