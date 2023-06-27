@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
 import { RelationButtons } from '../components/Profile/RelationButtons'
 import { profile } from '../components/Profile/ProfileContent'
+import { Friends } from '../components/Profile/tabs/Friends'
 
 export const User = () => {
   const socket = useContext(SocketContext)
@@ -57,7 +58,6 @@ export const User = () => {
     <div
       style={{
         paddingLeft: '82px',
-        height: '200vh',
         width: '65%',
         display: 'flex',
         margin: '0 auto',
@@ -112,7 +112,7 @@ export const User = () => {
         <About profile={profile} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Friends
+        <Friends friends={profile?.friends} />
       </TabPanel>
       <TabPanel value={value} index={3}>
         Photos
