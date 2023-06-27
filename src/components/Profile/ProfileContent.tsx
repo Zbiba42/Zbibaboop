@@ -8,6 +8,7 @@ import { Box, Button, Tab, Tabs } from '@mui/material'
 import { TabPanel } from './TabContent'
 import { About } from './tabs/About'
 import { ProfileEdit } from './update/ProfileEdit'
+import { Friends } from './tabs/Friends'
 
 interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>
@@ -23,7 +24,13 @@ export interface profile {
   Country: string
   College: string
   HighSchool: string
-  friends: Array<profile>
+  friends: Array<{
+    _id: string
+    Fullname: string
+    ProfilePath: string
+    Country: string
+    City: string
+  }>
 }
 export const ProfileContent = ({ setAnimate }: Props) => {
   const [profile, setProfile] = useState<profile>()
@@ -105,7 +112,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
           <About profile={profile} />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Friends
+          <Friends friends={profile?.friends} />
         </TabPanel>
         <TabPanel value={value} index={3}>
           Photos
