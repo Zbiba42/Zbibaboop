@@ -4,6 +4,7 @@ const {
   getUser,
   updateUser,
   checkUsersRelation,
+  removeFriend,
   getNotifications,
   readNtofication,
   removeNtofication,
@@ -14,6 +15,8 @@ router.get('/getUser', getUser)
 router.get('/getRelation', checkUsersRelation)
 
 router.get('/getNotifs', getNotifications)
+
+router.post('/removeFriend', removeFriend)
 
 router.post('/updateUser', uploadMiddleware, updateUser)
 
