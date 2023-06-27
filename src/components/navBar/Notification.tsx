@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { serverUrl } from '../../config'
 import { FriendRequest } from './FriendRequest'
-import { profile } from '../../pages/User'
+import { profile } from '../Profile/ProfileContent'
 import { Link } from 'react-router-dom'
 
 interface Props {

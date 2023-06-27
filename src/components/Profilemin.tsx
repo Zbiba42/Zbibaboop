@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom'
 import { serverUrl } from '../config'
-import { User } from '../pages/Search'
 import { Typography } from '@mui/material'
 
 interface Props {
-  user: User
+  user: {
+    _id: string
+    Fullname: string
+    ProfilePath: string
+    Country: string
+    City: string
+  }
 }
 export const Profilemin = ({ user }: Props) => {
   return (

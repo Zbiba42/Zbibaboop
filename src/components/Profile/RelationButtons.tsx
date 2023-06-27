@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import jwtDecode from 'jwt-decode'
 import { Socket } from 'socket.io-client'
 import { Button } from '@mui/material'
-import { profile } from '../../pages/User'
+import { profile } from './ProfileContent'
 interface Props {
   socket: Socket | null
   profile: profile | undefined

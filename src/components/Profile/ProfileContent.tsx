@@ -13,16 +13,17 @@ interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>
 }
 export interface profile {
+  _id: string
   CoverPath: string
   ProfilePath: string
   Fullname: string
   bio: string
-  gender: string
   Work: string
   City: string
   Country: string
   College: string
   HighSchool: string
+  friends: Array<profile>
 }
 export const ProfileContent = ({ setAnimate }: Props) => {
   const [profile, setProfile] = useState<profile>()

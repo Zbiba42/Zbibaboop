@@ -1,7 +1,7 @@
-import { User } from '../../pages/Search'
+import { profile } from '../Profile/ProfileContent'
 import { Profilemin } from '../Profilemin'
 interface Props {
-  results: Array<User>
+  results: Array<profile>
 }
 export const SearchResults = ({ results }: Props) => {
   return (

@@ -5,23 +5,12 @@ import TextField from '@mui/material/TextField/TextField'
 import axios from 'axios'
 import { serverUrl } from '../config'
 import { SearchResults } from '../components/search/SearchResults'
-export interface User {
-  _id: string
-  CoverPath: string
-  ProfilePath: string
-  Fullname: string
-  bio: string
-  gender: string
-  Work: string
-  City: string
-  Country: string
-  College: string
-  HighSchool: string
-}
+import { profile } from '../components/Profile/ProfileContent'
+
 export const Search = () => {
   const location = useLocation()
   const [filter, setFilter] = useState<string>('All')
-  const [results, setResults] = useState<Array<User>>([])
+  const [results, setResults] = useState<Array<profile>>([])
   const handleSearch = async (filter: string, search: string) => {
     try {
       const { data } = await axios.get(

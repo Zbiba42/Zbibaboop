@@ -1,19 +1,9 @@
 import { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import { serverUrl } from '../../../config'
+import { profile } from '../ProfileContent'
 interface Props {
-  profile?: {
-    CoverPath: string
-    ProfilePath: string
-    Fullname: string
-    bio: string
-    gender: string
-    Work: string
-    City: string
-    Country: string
-    College: string
-    HighSchool: string
-  }
+  profile?: profile
   profilePicRef: React.RefObject<HTMLInputElement>
   coverPicRef: React.RefObject<HTMLInputElement>
 }

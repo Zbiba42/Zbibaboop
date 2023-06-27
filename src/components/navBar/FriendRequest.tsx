@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { SocketContext } from '../../routes/PrivateRoutesWrapper'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { profile } from '../../pages/User'
+import { profile } from '../Profile/ProfileContent'
 interface Props {
   notif: {
     sender: String

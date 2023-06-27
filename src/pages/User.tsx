@@ -8,19 +8,8 @@ import { About } from '../components/Profile/tabs/About'
 import { useParams } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
 import { RelationButtons } from '../components/Profile/RelationButtons'
-export interface profile {
-  _id: string
-  CoverPath: string
-  ProfilePath: string
-  Fullname: string
-  bio: string
-  gender: string
-  Work: string
-  City: string
-  Country: string
-  College: string
-  HighSchool: string
-}
+import { profile } from '../components/Profile/ProfileContent'
+
 export const User = () => {
   const socket = useContext(SocketContext)
   const [profile, setProfile] = useState<profile>()
