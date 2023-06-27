@@ -87,7 +87,7 @@ const removeFriend = async (req, res) => {
   console.log(req.payload.id)
   try {
     await User.updateOne({ _id: req.payload.id }, { $pull: { friends: id } })
-
+    await User.updateOne({ _id: id }, { $pull: { friends: req.payload.id } })
     res.status(200).json({ succes: true, data: 'friend removed succesfully' })
   } catch (error) {
     res.status(400).json({ succes: false, data: error })
