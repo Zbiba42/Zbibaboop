@@ -1,4 +1,4 @@
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, Flip } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
 import './App.css'
@@ -45,11 +45,12 @@ function App() {
     <>
       <ToastContainer
         position="top-center"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
         rtl={false}
+        transition={Flip}
         pauseOnFocusLoss
         draggable
         pauseOnHover
