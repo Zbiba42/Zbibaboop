@@ -6,6 +6,8 @@ import jwtDecode from 'jwt-decode'
 import { Socket } from 'socket.io-client'
 import { Button } from '@mui/material'
 import { profile } from './ProfileContent'
+import axios from 'axios'
+import { serverUrl } from '../../config'
 interface Props {
   socket: Socket | null
   profile: profile | undefined
@@ -56,6 +58,17 @@ export const RelationButtons = ({
       })
     }
   }
+  const removeFriend = async () => {
+    const { data } = await axios.post(serverUrl + '/api/user/removeFriend', {
+      id: profile?._id,
+    })
+    if (data.succes === true) {
+      toast.success(`you removed ${profile?.Fullname} from your friend list`)
+      setRelation('none')
+    } else {
+      toast.error(`there was an error please try again later`)
+    }
+  }
   return (
     <>
       {relation === 'already sent' ? (
@@ -98,6 +111,7 @@ export const RelationButtons = ({
               alignItems: 'center',
             }}
             className="float-right"
+            onClick={removeFriend}
           >
             Remove Friend
             <i className="fa-solid fa-user-xmark fa-lg ml-1"></i>
