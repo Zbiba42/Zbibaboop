@@ -1,9 +1,13 @@
+import jwtDecode from 'jwt-decode'
 import { profile } from '../Profile/ProfileContent'
 import { Profilemin } from '../Profilemin'
 interface Props {
   results: Array<profile>
 }
 export const SearchResults = ({ results }: Props) => {
+  const decodedToken: { id: string } = jwtDecode(
+    sessionStorage.getItem('AccessToken') as string
+  )
   return (
     <div
       style={{
@@ -12,7 +16,9 @@ export const SearchResults = ({ results }: Props) => {
       }}
     >
       {results.map((user) => {
-        return <Profilemin user={user} />
+        if (user._id != decodedToken.id) {
+          return <Profilemin user={user} />
+        }
       })}
     </div>
   )
