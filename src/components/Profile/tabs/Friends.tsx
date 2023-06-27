@@ -38,7 +38,6 @@ export const Friends = ({ friends }: Props) => {
           padding: 0,
           textAlign: 'left',
           display: 'flex',
-          justifyContent: 'center',
           width: '100%',
           flexWrap: 'wrap',
           gap: '3%',
@@ -51,11 +50,13 @@ export const Friends = ({ friends }: Props) => {
             </div>
           )
         })}
-        <Pagination
-          page={pageNumber}
-          count={totalPages}
-          onChange={pagination}
-        />
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <Pagination
+            page={pageNumber}
+            count={totalPages}
+            onChange={pagination}
+          />
+        </Box>
       </Box>
     </>
   )
