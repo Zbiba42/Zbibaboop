@@ -11,7 +11,7 @@ export const Search = () => {
   const location = useLocation()
   const [filter, setFilter] = useState<string>('All')
   const [results, setResults] = useState<Array<profile>>([])
-  const handleSearch = async (filter: string, search: string) => {
+  const handleSearch = async (_filter: string, search: string) => {
     try {
       const { data } = await axios.get(
         serverUrl + `/api/search/?search=${search}&page=1`
@@ -32,7 +32,6 @@ export const Search = () => {
       <div
         style={{
           paddingLeft: '82px',
-          height: '200vh',
           width: '100%',
           display: 'flex',
           flexDirection: 'column',

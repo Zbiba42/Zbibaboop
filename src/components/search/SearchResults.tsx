@@ -9,8 +9,6 @@ export const SearchResults = ({ results }: Props) => {
       style={{
         margin: '100px 20rem 0',
         width: '50%',
-        height: '200vh',
-        scrollBehavior: 'smooth',
       }}
     >
       {results.map((user) => {
