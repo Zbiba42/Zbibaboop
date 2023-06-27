@@ -78,6 +78,19 @@ const updateUser = async (req, res) => {
   }
 }
 
+const removeFriend = async (req, res) => {
+  const id = req.body.id
+  console.log(id)
+  console.log(req.payload.id)
+  try {
+    await User.updateOne({ _id: req.payload.id }, { $pull: { friends: id } })
+
+    res.status(200).json({ succes: true, data: 'friend removed succesfully' })
+  } catch (error) {
+    res.status(400).json({ succes: false, data: error })
+  }
+}
+
 const getNotifications = async (req, res) => {
   const id = req.query.id
   try {
@@ -126,6 +139,7 @@ module.exports = {
   getUser,
   updateUser,
   checkUsersRelation,
+  removeFriend,
   getNotifications,
   readNtofication,
   removeNtofication,
