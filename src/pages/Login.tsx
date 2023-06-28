@@ -25,7 +25,7 @@ export const Login = () => {
   }, [isAuthenticated, navigate])
 
   return (
-    <div className="flex justify-items-center flex-wrap p-[3rem]">
+    <div className="flex justify-items-center flex-wrap p-[5.5rem]">
       <div className="m-auto mt-10">
         <img src={Logo} alt="logo" draggable="false" />
       </div>
