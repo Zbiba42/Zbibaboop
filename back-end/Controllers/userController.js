@@ -41,7 +41,7 @@ const checkUsersRelation = async (req, res) => {
     sender: user1,
     Receiver: user2,
   })
-  const alreadyReceived = await FriendRequest.exists({
+  const alreadyReceived = await FriendRequest.findOne({
     sender: user2,
     Receiver: user1,
   })
@@ -52,7 +52,11 @@ const checkUsersRelation = async (req, res) => {
     return
   }
   if (alreadyReceived) {
-    res.status(200).json({ succes: true, data: 'already Received' })
+    res.status(200).json({
+      succes: true,
+      data: 'already Received',
+      friendReq: alreadyReceived,
+    })
     return
   }
   if (isFriends) {
@@ -83,8 +87,6 @@ const updateUser = async (req, res) => {
 
 const removeFriend = async (req, res) => {
   const id = req.body.id
-  console.log(id)
-  console.log(req.payload.id)
   try {
     await User.updateOne({ _id: req.payload.id }, { $pull: { friends: id } })
     await User.updateOne({ _id: id }, { $pull: { friends: req.payload.id } })
