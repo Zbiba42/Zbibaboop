@@ -101,12 +101,23 @@ const acceptFriendReq = async (io, data) => {
       {
         $pull: {
           friendRequestsReceived: friendRequest.id,
-          notifications: notification.id,
         },
       }
     )
+    if (notification) {
+      await User.updateOne(
+        { _id: data.receiver },
+        {
+          $pull: {
+            notifications: notification.id,
+          },
+        }
+      )
+    }
     // delete the notif and friend request in the end
-    await Notification.deleteOne(notifquery)
+    if (notification) {
+      await Notification.deleteOne(notifquery)
+    }
     await FriendReq.deleteOne(data.content)
     // create notif for the sender
     const SenderNotification = await Notification.create({
