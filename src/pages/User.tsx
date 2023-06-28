@@ -16,6 +16,9 @@ export const User = () => {
   const [profile, setProfile] = useState<profile>()
   const [value, setValue] = useState(0)
   const [relation, setRelation] = useState<string>()
+  const [FriendReq, setFriendReq] = useState<
+    { sender: string; Receiver: string; status: string } | undefined
+  >()
   const { id } = useParams()
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -38,6 +41,9 @@ export const User = () => {
       const { data } = await axios.get(
         serverUrl + `/api/user/getRelation?user1=${decodedToken.id}&user2=${id}`
       )
+      if (data.data === 'already Received') {
+        setFriendReq(data.friendReq)
+      }
       setRelation(data.data)
     }
   }
@@ -88,6 +94,7 @@ export const User = () => {
           socket={socket}
           profile={profile}
           relation={relation}
+          FriendReq={FriendReq}
           setRelation={setRelation}
         />
 
