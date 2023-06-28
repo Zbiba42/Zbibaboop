@@ -12,12 +12,14 @@ interface Props {
   socket: Socket | null
   profile: profile | undefined
   relation: string | undefined
+  FriendReq: { sender: string; Receiver: string; status: string } | undefined
   setRelation: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 export const RelationButtons = ({
   socket,
   profile,
   relation,
+  FriendReq,
   setRelation,
 }: Props) => {
   const addFriend = async () => {
@@ -35,6 +37,28 @@ export const RelationButtons = ({
             toastId: 'sent',
           })
           setRelation('already sent')
+        }
+      })
+    }
+  }
+  const acceptReq = () => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken && socket) {
+      socket?.emit('acceptFriendReq', {
+        sender: profile?._id,
+        receiver: decodedToken.id,
+        type: 'friend request',
+        content: FriendReq,
+      })
+      socket?.on('friendReqAcceptedSuccess', (data) => {
+        if (data.succes) {
+          toast.success(data.data + profile?.Fullname, {
+            toastId: 'friendReqAccept',
+          })
         }
       })
     }
@@ -96,6 +120,7 @@ export const RelationButtons = ({
             alignItems: 'center',
           }}
           className="float-right"
+          onClick={acceptReq}
         >
           Accept Request
           <i className="fa-solid fa-user-check fa-lg ml-1 "></i>
