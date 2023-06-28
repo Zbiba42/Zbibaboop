@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion, useAnimation, AnimationControls } from 'framer-motion'
 import { useContext } from 'react'
 import { HandleProfileClickContext } from '../routes/AppRoutes'
@@ -23,26 +23,42 @@ export const Profile = () => {
       animateContext?.setAnimate('close')
     }
   }
-
+  const containerRef = useRef<HTMLDivElement>(null)
+  const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (containerRef.current && containerRef.current == event.target) {
+      setAnimate?.('closing')
+    }
+  }
   return (
-    <motion.div
-      initial={{ x: '-100%' }}
-      animate={controls as AnimationControls}
-      transition={{ type: 'spring', duration: 0.8 }}
+    <div
       style={{
         position: 'fixed',
-        zIndex: 2,
-        top: 0,
-        left: 0,
-        width: '50%',
-        height: '100vh',
-        overflow: 'scroll',
-        backgroundColor: '#F9F9F9',
-        borderRight: '1px solid black',
+        width: '100%',
+        height: '100%',
+        zIndex: 1,
       }}
-      onAnimationComplete={onAnimationComplete}
+      ref={containerRef}
+      onMouseDown={handleClickOutside}
     >
-      <ProfileContent setAnimate={setAnimate} />
-    </motion.div>
+      <motion.div
+        initial={{ x: '-100%' }}
+        animate={controls as AnimationControls}
+        transition={{ type: 'spring', duration: 0.8 }}
+        style={{
+          position: 'fixed',
+          zIndex: 2,
+          top: 0,
+          left: 0,
+          width: '50%',
+          height: '100vh',
+          overflow: 'scroll',
+          backgroundColor: '#F9F9F9',
+          borderRight: '1px solid black',
+        }}
+        onAnimationComplete={onAnimationComplete}
+      >
+        <ProfileContent setAnimate={setAnimate} />
+      </motion.div>
+    </div>
   )
 }
