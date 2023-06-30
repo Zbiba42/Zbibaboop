@@ -33,7 +33,24 @@ const search = async (req, res) => {
       totalPages: totalPages,
     })
   } catch (error) {
-    res.status(400).json({ succes: false, error: 'error.message' })
+    res.status(400).json({ succes: false, error: error.message })
   }
 }
-module.exports = { search }
+
+const searchFriends = async (req, res) => {
+  const userId = req.payload.id
+  const searchTerm = req.query.searchTerm
+  try {
+    const user = await User.findOne({ _id: userId }, { friends: 1 }).populate(
+      'friends'
+    )
+
+    const matchingFriends = user.friends.filter((friend) =>
+      friend.Fullname.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    res.status(200).json({ succes: true, data: matchingFriends })
+  } catch (error) {
+    res.status(400).json({ succes: false, data: error.message })
+  }
+}
+module.exports = { search, searchFriends }
