@@ -8,6 +8,7 @@ import { HandleProfileClickContext } from '../routes/AppRoutes'
 import { SearchInput } from '../components/search/SearchInput'
 import { Socket, io } from 'socket.io-client'
 import { createContext } from 'react'
+import { ChatContainer } from '../components/chat/ChatContainer'
 
 export const SocketContext = createContext<Socket | null>(null)
 
@@ -24,7 +25,9 @@ export const PrivateRoutesWrapper = () => {
     const currentTime = Date.now() / 1000
     return decodedToken.exp < currentTime
   }
+
   const animateContext = useContext(HandleProfileClickContext)
+
   useEffect(() => {
     const accessToken = sessionStorage.getItem('AccessToken')
     const decodedToken = accessToken
@@ -49,6 +52,7 @@ export const PrivateRoutesWrapper = () => {
       <SocketContext.Provider value={socket}>
         <SideBar />
         <NavBar />
+        <ChatContainer />
         {location.pathname === '/search' ? '' : <SearchInput />}
         {animateContext?.animate === 'open' ||
         animateContext?.animate === 'closing' ? (
