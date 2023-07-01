@@ -1,26 +1,12 @@
-const {
-  sendFriendReq,
-  cancelFriendReq,
-  acceptFriendReq,
-  declineFriendReq,
-} = require('./events')
-
+const { FriendRequests } = require('./friendRequests')
+const { Messages } = require('./messages')
 module.exports = (io) => {
   io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId
     socket.join(userId)
-    socket.on('sendFriendReq', (data) => {
-      sendFriendReq(io, data)
-    })
-    socket.on('cancelFriendReq', (data) => {
-      cancelFriendReq(io, data)
-    })
-    socket.on('acceptFriendReq', (data) => {
-      acceptFriendReq(io, data)
-    })
-    socket.on('declineFriendReq', (data) => {
-      declineFriendReq(io, data)
-    })
+
+    FriendRequests(io, socket)
+    Messages(io, socket)
     socket.on('disconnect', () => {
       console.log('disconected')
     })
