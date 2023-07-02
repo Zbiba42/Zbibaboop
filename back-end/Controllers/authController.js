@@ -4,7 +4,6 @@ require('dotenv').config()
 
 const User = require('../models/user')
 const RefreshToken = require('../models/refreshToken')
-const refreshToken = require('../models/refreshToken')
 
 const signUp = async (req, res) => {
   try {
@@ -59,7 +58,7 @@ const logIn = async (req, res) => {
 
 const LogOut = async (req, res) => {
   try {
-    await refreshToken.deleteOne({ Token: req.body.refreshToken })
+    await RefreshToken.deleteOne({ Token: req.body.refreshToken })
     res
       .status(200)
       .json({ succes: true, data: 'you logged out succesfully!  ' })
@@ -71,12 +70,12 @@ const LogOut = async (req, res) => {
 const RefreshTokens = async (req, res) => {
   const refToken = req.body.refreshToken
 
-  if (!refreshToken)
+  if (!refToken)
     return res
       .status(401)
       .json({ succes: false, error: 'you are not authenticated !' })
 
-  const refreshtoken = await refreshToken.findOne({ Token: refToken })
+  const refreshtoken = await RefreshToken.findOne({ Token: refToken })
   if (refreshtoken == null) {
     return res
       .status(403)
@@ -91,7 +90,7 @@ const RefreshTokens = async (req, res) => {
         data: err,
       })
     try {
-      await refreshToken.deleteOne({ Token: req.body.refreshToken })
+      await RefreshToken.deleteOne({ Token: req.body.refreshToken })
     } catch (error) {
       res.send(error)
     }
@@ -119,7 +118,7 @@ const RefreshTokens = async (req, res) => {
     )
 
     try {
-      await RefreshToken.create({ Token: refreshToken })
+      await RefreshToken.create({ Token: newRefreshToken })
     } catch (error) {
       res.send(error)
     }
