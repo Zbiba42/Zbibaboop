@@ -8,7 +8,7 @@ import { HandleProfileClickContext } from '../routes/AppRoutes'
 import { SearchInput } from '../components/search/SearchInput'
 import { Socket, io } from 'socket.io-client'
 import { createContext } from 'react'
-import { ChatContainer } from '../components/chat/ChatContainer'
+import { ChatContainer } from '../components/chat/ChatsContainer'
 
 export const SocketContext = createContext<Socket | null>(null)
 
