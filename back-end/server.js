@@ -18,12 +18,14 @@ const { authToken } = require('./middlewares/AuthToken')
 const Auth = require('./Routes/Auth')
 const User = require('./Routes/user')
 const Search = require('./Routes/search')
-
+const Messages = require('./Routes/message')
 app.use('/api/auth', Auth)
 
 app.use('/api/search', authToken, Search)
 
 app.use('/api/user', authToken, User)
+
+app.use('/api/messages', authToken, Messages)
 
 const io = socketIO(server, {
   cors: {
