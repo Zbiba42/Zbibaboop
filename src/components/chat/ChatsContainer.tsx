@@ -5,11 +5,13 @@ import { PickMsgReceiver } from './PickMsgReceiver'
 import { NewChat } from './NewChat'
 import { Chat } from './Chat'
 import { profile } from '../Profile/ProfileContent'
+import jwtDecode from 'jwt-decode'
 
 export const ChatContainer = () => {
   const newChatShown = useSelector((state: any) => state.Chat.newChatShown)
   const Chats = useSelector((state: any) => state.Chat.Chats)
-  console.log(Chats)
+  const token = sessionStorage.getItem('AccessToken') as string
+  const decodedToken = jwtDecode(token) as any
   return (
     <Box
       sx={{
@@ -25,7 +27,7 @@ export const ChatContainer = () => {
     >
       {newChatShown && <PickMsgReceiver />}
       {Chats.map((chat: { recipient: profile }) => {
-        return <Chat recipient={chat.recipient} />
+        return <Chat sender={decodedToken.id} recipient={chat.recipient} />
       })}
       <NewChat />
     </Box>

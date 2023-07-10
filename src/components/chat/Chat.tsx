@@ -6,14 +6,102 @@ import { removeChat } from '../../redux/chat'
 import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
+import { MsgSent } from './messages/MsgSent'
+import { MsgReceived } from './messages/MsgReceived'
+import { useContext, useEffect, useRef, useState } from 'react'
+import axios from 'axios'
+import { SocketContext } from '../../routes/PrivateRoutesWrapper'
+import InfiniteScroll from 'react-infinite-scroll-component'
+
 interface Props {
+  sender: string
   recipient: profile
 }
 
-export const Chat = ({ recipient }: Props) => {
+export const Chat = ({ sender, recipient }: Props) => {
+  const socket = useContext(SocketContext)
   const dispatch = useDispatch()
+  let FirstReceived: any = null
+  let FirstSent: any = null
+  const chatRef = useRef<HTMLDivElement>(null)
+  const TextMsgRef = useRef<HTMLInputElement>(null)
+  const [messages, setMessages] = useState([])
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+
+  const getMessages = async () => {
+    try {
+      const { data } = await axios.get(serverUrl + '/api/messages/', {
+        params: {
+          recipient: recipient._id,
+          page: page,
+        },
+      })
+
+      setMessages(data.data.messages.reverse())
+    } catch (error) {
+      console.error('Error fetching messages:', error)
+    }
+  }
+
+  const getNextMessages = async () => {
+    alert('called')
+    try {
+      const { data } = await axios.get(serverUrl + '/api/messages/', {
+        params: {
+          recipient: recipient._id,
+          page: page + 1,
+        },
+      })
+
+      if (data.data.messages.length === 0) {
+        setHasMore(false)
+        return
+      }
+
+      setPage((prevPage) => prevPage + 1)
+
+      setMessages(data.data.messages.reverse())
+    } catch (error) {
+      console.error('Error fetching next messages:', error)
+    }
+  }
+
+  const sendMessage = () => {
+    const TextData = TextMsgRef.current?.value
+
+    if (TextData) {
+      const message = {
+        sender: sender,
+        recipient: recipient._id,
+        type: 'text',
+        content: TextData,
+      }
+
+      socket?.emit('sendMessage', message)
+
+      setTimeout(() => {
+        getMessages()
+        if (chatRef.current) {
+          chatRef.current.scrollTop = chatRef.current.scrollHeight
+        }
+      }, 1)
+    }
+  }
+
+  useEffect(() => {
+    socket?.on('receiveMessage', () => {
+      getMessages()
+    })
+  }, [])
+
+  useEffect(() => {
+    getMessages()
+  }, [])
+
   return (
     <Box
+      ref={chatRef}
       sx={{
         backgroundColor: 'white',
         width: 320,
@@ -48,14 +136,51 @@ export const Chat = ({ recipient }: Props) => {
       <hr className="w-full" />
       <Box
         sx={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          p: 1,
         }}
       >
-        <h2>Chat aykon hna</h2>
+        <InfiniteScroll
+          dataLength={messages.length}
+          next={() => getNextMessages()}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+          endMessage={
+            <p style={{ textAlign: 'center' }}>
+              <b>Yay! You have seen it all</b>
+            </p>
+          }
+          scrollThreshold={1}
+        >
+          {messages.map((msg: any, index) => {
+            if (msg.sender == recipient._id) {
+              if (FirstReceived == null) {
+                FirstReceived = msg._id
+                FirstSent = null
+              }
+              return (
+                <MsgReceived
+                  content={msg.content}
+                  isFirst={FirstReceived == msg._id}
+                  img={recipient.ProfilePath}
+                  key={index}
+                />
+              )
+            } else {
+              if (FirstSent == null) {
+                FirstSent = msg._id
+                FirstReceived = null
+              }
+              return (
+                <MsgSent
+                  content={msg.content}
+                  isFirst={FirstSent == msg._id}
+                  img={recipient.ProfilePath}
+                  key={index}
+                />
+              )
+            }
+          })}
+        </InfiniteScroll>
       </Box>
       <Box
         sx={{
@@ -76,6 +201,7 @@ export const Chat = ({ recipient }: Props) => {
           placeholder="Type a message"
           autoComplete="off"
           variant="standard"
+          inputRef={TextMsgRef}
         />
         <label htmlFor="file-input">
           <IconButton component="span">
@@ -83,7 +209,7 @@ export const Chat = ({ recipient }: Props) => {
           </IconButton>
           <input type="file" id="file-input" style={{ display: 'none' }} />
         </label>
-        <IconButton>
+        <IconButton onClick={sendMessage}>
           <SendIcon />
         </IconButton>
       </Box>
