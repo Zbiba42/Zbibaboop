@@ -22,7 +22,7 @@ export const MsgReceived = ({ img, content, isFirst }: Props) => {
             <img
               src={serverUrl + img}
               alt="My profile"
-              className="w-6 h-6 rounded-full order-1"
+              className="w-6 h-6 rounded-full order-1 object-cover"
             />
           </>
         ) : (
