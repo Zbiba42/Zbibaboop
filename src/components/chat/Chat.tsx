@@ -12,19 +12,21 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { SocketContext } from '../../routes/PrivateRoutesWrapper'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { toast } from 'react-toastify'
 
 interface Props {
   sender: string
   recipient: profile
+  senderProfile: string
 }
 
-export const Chat = ({ sender, recipient }: Props) => {
+export const Chat = ({ senderProfile, sender, recipient }: Props) => {
   const socket = useContext(SocketContext)
   const dispatch = useDispatch()
   let FirstReceived: any = null
   let FirstSent: any = null
-  const chatRef = useRef<HTMLDivElement>(null)
   const TextMsgRef = useRef<HTMLInputElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const [messages, setMessages] = useState([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
@@ -37,15 +39,21 @@ export const Chat = ({ sender, recipient }: Props) => {
           page: page,
         },
       })
-
-      setMessages(data.data.messages.reverse())
-    } catch (error) {
-      console.error('Error fetching messages:', error)
+      if (data.data) {
+        setMessages(data.data.messages.reverse())
+        if (data.data.messages.length === 0) {
+          setHasMore(false)
+          return
+        }
+      } else {
+        setMessages([])
+      }
+    } catch (error: any) {
+      toast.error(error.message)
     }
   }
 
   const getNextMessages = async () => {
-    alert('called')
     try {
       const { data } = await axios.get(serverUrl + '/api/messages/', {
         params: {
@@ -56,12 +64,11 @@ export const Chat = ({ sender, recipient }: Props) => {
 
       if (data.data.messages.length === 0) {
         setHasMore(false)
-        return
       }
 
       setPage((prevPage) => prevPage + 1)
 
-      setMessages(data.data.messages.reverse())
+      setMessages(data.data.messages.reverse().concat(messages))
     } catch (error) {
       console.error('Error fetching next messages:', error)
     }
@@ -79,29 +86,32 @@ export const Chat = ({ sender, recipient }: Props) => {
       }
 
       socket?.emit('sendMessage', message)
-
-      setTimeout(() => {
-        getMessages()
-        if (chatRef.current) {
-          chatRef.current.scrollTop = chatRef.current.scrollHeight
-        }
-      }, 1)
     }
   }
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop +=
+        messagesContainerRef.current.scrollHeight / (messages.length / 40)
+    }
+  }, [messages])
 
   useEffect(() => {
     socket?.on('receiveMessage', () => {
       getMessages()
     })
-  }, [])
-
-  useEffect(() => {
+    socket?.on('messageSentResponse', (data) => {
+      if (!data.succes) {
+        toast.error('there was an error please try again later ')
+      } else {
+        getMessages()
+      }
+    })
     getMessages()
   }, [])
 
   return (
     <Box
-      ref={chatRef}
       sx={{
         backgroundColor: 'white',
         width: 320,
@@ -135,7 +145,13 @@ export const Chat = ({ sender, recipient }: Props) => {
 
       <hr className="w-full" />
       <Box
+        ref={messagesContainerRef}
+        id="messagesContainer"
         sx={{
+          height: '100%',
+          overflow: 'scroll',
+          display: 'flex',
+          flexDirection: 'column-reverse',
           p: 1,
         }}
       >
@@ -143,14 +159,17 @@ export const Chat = ({ sender, recipient }: Props) => {
           dataLength={messages.length}
           next={() => getNextMessages()}
           hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-          endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
-          scrollThreshold={1}
+          inverse={true}
+          loader={''}
+          scrollableTarget="messagesContainer"
+          key={recipient._id}
         >
+          {messages.length === 0 && (
+            <h3 className="text-center">
+              This is the start of your conversation with {recipient.Fullname}{' '}
+              say Hi!
+            </h3>
+          )}
           {messages.map((msg: any, index) => {
             if (msg.sender == recipient._id) {
               if (FirstReceived == null) {
@@ -174,7 +193,7 @@ export const Chat = ({ sender, recipient }: Props) => {
                 <MsgSent
                   content={msg.content}
                   isFirst={FirstSent == msg._id}
-                  img={recipient.ProfilePath}
+                  img={senderProfile}
                   key={index}
                 />
               )
