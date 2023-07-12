@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const { uploadMiddleware } = require('../middlewares/multerImages.js')
 const {
+  getUsersImg,
   getUser,
   updateUser,
   checkUsersRelation,
@@ -9,6 +10,8 @@ const {
   readNtofication,
   removeNtofication,
 } = require('../Controllers/userController.js')
+
+router.get('/getUsersImg', getUsersImg)
 
 router.get('/getUser', getUser)
 

@@ -1,6 +1,24 @@
 const User = require('../models/user')
 const FriendRequest = require('../models/friendRequest')
 const Notification = require('../models/notification')
+
+const getUsersImg = async (req, res) => {
+  try {
+    const id = req.query.id
+
+    const image = await User.findOne(
+      { _id: id },
+      {
+        ProfilePath: 1,
+      }
+    )
+    res.status(200).json({ succes: true, data: image })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
 const getUser = async (req, res) => {
   try {
     const id = req.query.id
@@ -141,6 +159,7 @@ const removeNtofication = async (req, res) => {
   }
 }
 module.exports = {
+  getUsersImg,
   getUser,
   updateUser,
   checkUsersRelation,
