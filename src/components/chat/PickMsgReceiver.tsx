@@ -67,7 +67,7 @@ export const PickMsgReceiver = () => {
       <hr className="w-full" />
       <Box sx={{ overflow: 'scroll', height: '100%' }}>
         {Results.map((friend: profile) => {
-          return <FriendsResults friend={friend} />
+          return <FriendsResults friend={friend} key={friend._id} />
         })}
       </Box>
     </Box>
