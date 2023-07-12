@@ -6,7 +6,7 @@ const getMessages = async (req, res) => {
   const pageNumber = req.query.page
   try {
     const messages = await Conversation.findOne({
-      participants: participants,
+      participants: { $all: participants },
     }).populate({
       path: 'messages',
       options: {
