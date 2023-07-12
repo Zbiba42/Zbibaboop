@@ -16,10 +16,15 @@ const Messages = (io, socket) => {
     }
 
     if (data.type === 'text') {
-      const message = await Message.create(data)
-      conversation.messages.push(message)
-      await conversation.save()
-      io.to(data.recipient).emit('receiveMessage', message)
+      try {
+        const message = await Message.create(data)
+        conversation.messages.push(message)
+        await conversation.save()
+        io.to(data.recipient).emit('receiveMessage', message)
+        io.to(data.sender).emit('messageSentResponse', { succes: true })
+      } catch (error) {
+        io.to(data.sender).emit('messageSentResponse', { succes: false })
+      }
     } else {
       const filePath = `/uploads/${data.sender}`
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
