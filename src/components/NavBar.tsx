@@ -13,6 +13,7 @@ import axios from 'axios'
 import { Notifications } from './navBar/Notifications/Notifications'
 import { SocketContext } from '../routes/PrivateRoutesWrapper'
 import { ProfileMenu } from './navBar/Profile/ProfileMenu'
+import { ConversationsMenu } from './navBar/Conversations/ConversationsMenu'
 
 export const NavBar = () => {
   const socket = useContext(SocketContext)
@@ -25,7 +26,8 @@ export const NavBar = () => {
   )
   const [notifMenuAnchor, setNotifMenuAnchor] =
     React.useState<null | HTMLElement>(null)
-
+  const [convosMenuAnchor, setConvosMenuAnchor] =
+    React.useState<null | HTMLElement>(null)
   const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
       right: -7,
@@ -47,6 +49,13 @@ export const NavBar = () => {
   }
   const handleNotifMenuClose = () => {
     setNotifMenuAnchor(null)
+  }
+
+  const handleConvosMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setConvosMenuAnchor(event.currentTarget)
+  }
+  const handleConvosMenuClose = () => {
+    setConvosMenuAnchor(null)
   }
 
   const getUser = async () => {
@@ -79,13 +88,18 @@ export const NavBar = () => {
           paddingTop: 0.5,
         }}
         component={Link}
-        to={'/'}
+        onClick={handleConvosMenuClick}
       >
         <StyledBadge badgeContent={0} color="info">
           <i className="fa-regular fa-message text-xl m-1"></i>
         </StyledBadge>
         <h4>Messages</h4>
       </Box>
+      {/* Convos Menu */}
+      <ConversationsMenu
+        convosMenuAnchor={convosMenuAnchor}
+        handleConvosMenuClose={handleConvosMenuClose}
+      />
 
       <Box
         sx={{
