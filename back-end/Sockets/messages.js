@@ -21,7 +21,10 @@ const Messages = (io, socket) => {
         conversation.messages.push(message)
         await conversation.save()
         io.to(data.recipient).emit('receiveMessage', message)
-        io.to(data.sender).emit('messageSentResponse', { succes: true })
+        io.to(data.sender).emit('messageSentResponse', {
+          succes: true,
+          message: message,
+        })
       } catch (error) {
         io.to(data.sender).emit('messageSentResponse', { succes: false })
       }
