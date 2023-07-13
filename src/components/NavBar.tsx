@@ -1,38 +1,31 @@
-import { Box, Divider, ListItemIcon, Menu, MenuItem } from '@mui/material'
+import { Box } from '@mui/material'
 
-import Settings from '@mui/icons-material/Settings'
-import Logout from '@mui/icons-material/Logout'
 import jwtDecode from 'jwt-decode'
 import { NavBox } from '../styles/navStyle'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Badge, { BadgeProps } from '@mui/material/Badge'
 import { styled } from '@mui/material/styles'
 import React, { useContext, useEffect, useState } from 'react'
 import { HandleProfileClickContext } from '../routes/AppRoutes'
 import { serverUrl } from '../config'
 import axios from 'axios'
+
+import { Notifications } from './navBar/Notifications/Notifications'
 import { SocketContext } from '../routes/PrivateRoutesWrapper'
-import { toast } from 'react-toastify'
-import { Notification } from './navBar/Notification'
+import { ProfileMenu } from './navBar/Profile/ProfileMenu'
 
 export const NavBar = () => {
   const socket = useContext(SocketContext)
-  const navigate = useNavigate()
-  const [notifCount, setNotifCount] = useState<number>(0)
-  const [notifications, setNotifications] = useState<
-    Array<{
-      sender: String
-      receiver: String
-      type: String
-      content: { sender: String; Receiver: String; status: String }
-      status: String
-    }>
-  >([])
-  const [profile, setProfile] = useState('')
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const [anchorEl2, setAnchorEl2] = React.useState<null | HTMLElement>(null)
-
   const animateContext = useContext(HandleProfileClickContext)
+
+  const [notifCount, setNotifCount] = useState<number>(0)
+  const [profile, setProfile] = useState('')
+  const [profileAnchor, setProfileAnchor] = React.useState<null | HTMLElement>(
+    null
+  )
+  const [notifMenuAnchor, setNotifMenuAnchor] =
+    React.useState<null | HTMLElement>(null)
+
   const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
       right: -7,
@@ -41,20 +34,21 @@ export const NavBar = () => {
       padding: '0 4px',
     },
   }))
-  const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
+
+  const handleProfileMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setProfileAnchor(event.currentTarget)
   }
-  const handleClose = () => {
-    setAnchorEl(null)
+  const handleProfileMenuClose = () => {
+    setProfileAnchor(null)
   }
-  const open2 = Boolean(anchorEl2)
-  const handleClick2 = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl2(event.currentTarget)
+
+  const handleNotifMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setNotifMenuAnchor(event.currentTarget)
   }
-  const handleClose2 = () => {
-    setAnchorEl2(null)
+  const handleNotifMenuClose = () => {
+    setNotifMenuAnchor(null)
   }
+
   const getUser = async () => {
     const accessToken = sessionStorage.getItem('AccessToken')
     const decodedToken = accessToken
@@ -71,51 +65,11 @@ export const NavBar = () => {
       setProfile(serverUrl + data.data.ProfilePath)
     }
   }
-  const getNotifs = async () => {
-    const accessToken = sessionStorage.getItem('AccessToken')
-    const decodedToken = accessToken
-      ? jwtDecode<{ id: string }>(accessToken)
-      : null
 
-    if (decodedToken) {
-      const { data } = await axios.get(serverUrl + '/api/user/getNotifs', {
-        params: {
-          id: decodedToken.id,
-        },
-      })
-      setNotifications(data.data.reverse())
-      const unreadCount = data.data.filter(
-        (notif: { status: string }) => notif.status === 'unread'
-      ).length
-      setNotifCount(unreadCount)
-    }
-  }
-  const logout = () => {
-    sessionStorage.removeItem('AccessToken')
-    sessionStorage.removeItem('RefreshToken')
-    navigate('/')
-    toast.info('logged off succesfully')
-  }
-  useEffect(() => {
-    getNotifs()
-  }, [])
-
-  useEffect(() => {
-    if (socket) {
-      socket?.on('notification', () => {
-        getNotifs()
-      })
-      socket.on('cancelNotif', () => {
-        getNotifs()
-      })
-      socket.on('friendReqAccepted', () => {
-        getNotifs()
-      })
-    }
-  }, [socket])
   useEffect(() => {
     getUser()
   }, [animateContext])
+
   return (
     <Box sx={NavBox}>
       <Box
@@ -140,70 +94,24 @@ export const NavBar = () => {
           paddingTop: 0.5,
         }}
         component={Link}
-        onClick={handleClick2}
+        onClick={handleNotifMenuClick}
       >
         <StyledBadge badgeContent={notifCount} color="info">
           <i className="fa-regular fa-bell text-xl m-1"></i>
         </StyledBadge>
         <h4>Notifications</h4>
       </Box>
-
-      <Menu
-        anchorEl={anchorEl2}
-        id="notif-menu"
-        open={open2}
-        onClose={handleClose2}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 5px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            position: 'fixed',
-            width: '310px',
-            minHeight: '100px',
-            maxHeight: '500xp',
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            '&:before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <div className="overflow-y-scroll max-h-[500px] p-2 w-full notifications">
-          {notifications.length > 0 ? (
-            notifications.map((notif) => {
-              return <Notification getNotifs={getNotifs} notif={notif} />
-            })
-          ) : (
-            <div className="p-2 w-full h-full flex justify-center items-center">
-              <p className="text-sm font-medium leading-5 text-gray-900 m-1">
-                you dont have any notifications !
-              </p>
-            </div>
-          )}
-        </div>
-      </Menu>
+      {/* Notifications Menu */}
+      <Notifications
+        notifMenuAnchor={notifMenuAnchor}
+        handleNotifMenuClose={handleNotifMenuClose}
+        setNotifCount={setNotifCount}
+        socket={socket}
+      />
 
       <Box
         sx={{ width: '33%', paddingTop: 0.5, cursor: 'pointer' }}
-        onClick={handleClick}
+        onClick={handleProfileMenuClick}
       >
         <img
           className=" rounded-full  w-9 h-9 m-auto object-cover"
@@ -212,70 +120,13 @@ export const NavBar = () => {
         />
         <h4>Profile</h4>
       </Box>
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            '&:before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem
-          onClick={() => {
-            animateContext?.setAnimate('open')
-            handleClose()
-          }}
-        >
-          <img
-            className=" rounded-full  w-9 h-9 mr-2 object-cover"
-            src={profile}
-            alt=""
-          />{' '}
-          My Profile
-        </MenuItem>
-
-        <Divider />
-
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem onClick={logout}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu>
+      {/* Profile Menu */}
+      <ProfileMenu
+        profileAnchor={profileAnchor}
+        handleProfileMenuClose={handleProfileMenuClose}
+        profile={profile}
+        animateContext={animateContext}
+      />
     </Box>
   )
 }
