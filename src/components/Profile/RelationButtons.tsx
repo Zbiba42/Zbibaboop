@@ -63,6 +63,29 @@ export const RelationButtons = ({
       })
     }
   }
+  const declineReq = () => {
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken && socket) {
+      socket?.emit('declineFriendReq', {
+        sender: profile?._id,
+        receiver: decodedToken.id,
+        type: 'friend request',
+        content: FriendReq,
+      })
+      socket?.on('friendReqDeclinedSuccess', (data) => {
+        if (data.succes) {
+          toast.success(data.data + profile?.Fullname, {
+            toastId: 'friendReqDecline',
+          })
+          setRelation('none')
+        }
+      })
+    }
+  }
   const cancelReq = async () => {
     const accessToken = sessionStorage.getItem('AccessToken')
     const decodedToken = accessToken
@@ -111,20 +134,34 @@ export const RelationButtons = ({
           <i className="fa-solid fa-user-xmark fa-lg ml-1"></i>
         </Button>
       ) : relation === 'already Received' ? (
-        <Button
-          color="inherit"
-          variant="text"
-          style={{
-            marginRight: '1rem',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-          className="float-right"
-          onClick={acceptReq}
-        >
-          Accept Request
-          <i className="fa-solid fa-user-check fa-lg ml-1 "></i>
-        </Button>
+        <>
+          <Button
+            color="inherit"
+            variant="text"
+            style={{
+              marginRight: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            className="float-right"
+            onClick={acceptReq}
+          >
+            Accept Request
+            <i className="fa-solid fa-user-check fa-lg ml-1 "></i>
+          </Button>
+          <Button
+            color="inherit"
+            variant="text"
+            style={{
+              marginRight: '0.5rem',
+            }}
+            className="float-right"
+            onClick={declineReq}
+          >
+            Decline Request
+            <i className="fa-solid fa-user-xmark fa-lg ml-1"></i>
+          </Button>
+        </>
       ) : relation === 'friends' ? (
         <>
           <Button
