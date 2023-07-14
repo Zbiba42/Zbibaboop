@@ -8,6 +8,8 @@ import { Button } from '@mui/material'
 import { profile } from './ProfileContent'
 import axios from 'axios'
 import { serverUrl } from '../../config'
+import { useDispatch } from 'react-redux'
+import { AddChat } from '../../redux/chat'
 interface Props {
   socket: Socket | null
   profile: profile | undefined
@@ -22,6 +24,7 @@ export const RelationButtons = ({
   FriendReq,
   setRelation,
 }: Props) => {
+  const dispatch = useDispatch()
   const addFriend = async () => {
     const accessToken = sessionStorage.getItem('AccessToken')
     const decodedToken = accessToken
@@ -186,6 +189,7 @@ export const RelationButtons = ({
             }}
             endIcon={<ChatBubbleIcon fontSize="small" />}
             className="float-right"
+            onClick={() => dispatch(AddChat({ recipient: profile }))}
           >
             Send Message
           </Button>
