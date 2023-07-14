@@ -65,6 +65,7 @@ export const Notifications = ({
         getNotifs()
       })
     }
+    getNotifs()
   }, [socket])
 
   return (
