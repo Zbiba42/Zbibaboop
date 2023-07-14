@@ -1,5 +1,20 @@
 const Conversation = require('../models/conversation')
 
+const getConvos = async (req, res) => {
+  try {
+    const id = req.payload.id
+    const Conversations = await Conversation.find(
+      {
+        participants: { $all: [id] },
+      },
+      { participants: 1 }
+    )
+    res.status(200).json({ succes: true, data: Conversations })
+  } catch (error) {
+    res.status(200).json({ succes: true, error: error.message })
+  }
+}
+
 const getMessages = async (req, res) => {
   const participants = [req.payload.id, req.query.recipient]
   const pageSize = 40
@@ -21,4 +36,4 @@ const getMessages = async (req, res) => {
   }
 }
 
-module.exports = { getMessages }
+module.exports = { getConvos, getMessages }
