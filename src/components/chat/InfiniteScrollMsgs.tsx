@@ -32,12 +32,15 @@ export const InfiniteScrollMsgs = ({
 
   const getMessages = async () => {
     try {
-      const { data } = await axios.get(serverUrl + '/api/messages/', {
-        params: {
-          recipient: recipient._id,
-          page: page,
-        },
-      })
+      const { data } = await axios.get(
+        serverUrl + '/api/Conversation/messages',
+        {
+          params: {
+            recipient: recipient._id,
+            page: page,
+          },
+        }
+      )
       if (data.data) {
         setMessages(data.data.messages.reverse())
         if (data.data.messages.length === 0) {
