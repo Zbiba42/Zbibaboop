@@ -49,14 +49,23 @@ export const User = () => {
   }
 
   useEffect(() => {
-    socket?.on('friendReqAcceptedSuccess', (data) => {
-      if (data.succes) {
-        setRelation('friends')
-      }
+    socket?.on('friendReqAcceptedSuccess', () => {
+      checkRelation()
     })
     socket?.on('friendReqAccepted', () => {
-      setRelation('friends')
+      checkRelation()
     })
+    socket?.on('notification', (data) => {
+      if (data.sender === profile?._id) {
+        checkRelation()
+      }
+    })
+    socket?.on('cancelNotif', (data) => {
+      if (data.sender === profile?._id) {
+        checkRelation()
+      }
+    })
+
     checkRelation()
     getUser()
   }, [id])
