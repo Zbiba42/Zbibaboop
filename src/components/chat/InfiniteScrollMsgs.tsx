@@ -83,8 +83,10 @@ export const InfiniteScrollMsgs = ({
   }, [page])
 
   useEffect(() => {
-    socket?.on('receiveMessage', () => {
-      getMessages()
+    socket?.on('receiveMessage', (data) => {
+      if (data.sender == recipient._id) {
+        getMessages()
+      }
     })
     socket?.on('messageSentResponse', (data) => {
       if (!data.succes) {
