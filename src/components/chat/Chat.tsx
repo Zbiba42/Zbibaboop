@@ -21,7 +21,7 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
   const dispatch = useDispatch()
 
   const TextMsgRef = useRef<HTMLInputElement>(null)
-
+  const filesRef = useRef<HTMLInputElement>(null)
   const sendMessage = () => {
     const TextData = TextMsgRef.current?.value
     if (TextData) {
@@ -31,6 +31,31 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
         type: 'text',
         content: TextData,
       }
+      socket?.emit('sendMessage', message)
+    }
+    if (filesRef.current?.files && filesRef.current?.files.length > 0) {
+      const message = {
+        sender: sender,
+        recipient: recipient._id,
+        type: 'file',
+        content: [] as {
+          file: File
+          fileName: string
+          type: string
+          size: number
+        }[],
+      }
+      const files = Array.from(filesRef.current.files)
+      message.content = files.map((file) => {
+        return {
+          file: file,
+          fileName: file.name,
+          type: file.type,
+          size: file.size,
+        }
+      })
+
+      console.log(message)
       socket?.emit('sendMessage', message)
     }
   }
@@ -102,7 +127,13 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
           <IconButton component="span">
             <AttachFileIcon />
           </IconButton>
-          <input type="file" id="file-input" style={{ display: 'none' }} />
+          <input
+            type="file"
+            id="file-input"
+            style={{ display: 'none' }}
+            multiple
+            ref={filesRef}
+          />
         </label>
         <IconButton onClick={sendMessage}>
           <SendIcon />
