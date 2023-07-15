@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { Box, IconButton, TextField } from '@mui/material'
 import { serverUrl } from '../../config'
 import { profile } from '../Profile/ProfileContent'
@@ -9,6 +9,8 @@ import SendIcon from '@mui/icons-material/Send'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import { SocketContext } from '../../routes/PrivateRoutesWrapper'
 import { InfiniteScrollMsgs } from './InfiniteScrollMsgs'
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
 
 interface Props {
   sender: string
@@ -18,17 +20,21 @@ interface Props {
 
 export const Chat = ({ senderProfile, sender, recipient }: Props) => {
   const socket = useContext(SocketContext)
+  const [pickerShown, setPickerShown] = useState<Boolean>(false)
   const dispatch = useDispatch()
-
   const TextMsgRef = useRef<HTMLInputElement>(null)
   const filesRef = useRef<HTMLInputElement>(null)
+  const addEmoji = (e: any) => {
+    if (TextMsgRef.current) {
+      TextMsgRef.current.value += e.native
+    }
+  }
   const sendMessage = () => {
     const TextData = TextMsgRef.current?.value
     if (TextData) {
       const message = {
         sender: sender,
         recipient: recipient._id,
-        type: 'text',
         content: TextData,
       }
       socket?.emit('sendMessage', message)
@@ -38,7 +44,7 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
         sender: sender,
         recipient: recipient._id,
         type: 'file',
-        content: [] as {
+        files: [] as {
           file: File
           fileName: string
           type: string
@@ -46,7 +52,7 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
         }[],
       }
       const files = Array.from(filesRef.current.files)
-      message.content = files.map((file) => {
+      message.files = files.map((file) => {
         return {
           file: file,
           fileName: file.name,
@@ -122,6 +128,9 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
           autoComplete="off"
           variant="standard"
           inputRef={TextMsgRef}
+          onKeyDown={(e) => {
+            e.key == 'Enter' && sendMessage()
+          }}
         />
         <label htmlFor="file-input">
           <IconButton component="span">
@@ -135,6 +144,47 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
             ref={filesRef}
           />
         </label>
+        {pickerShown ? (
+          <div className="absolute top-[-5em] left-[-2em] outline outline-1 rounded-md">
+            <span
+              style={{
+                content: '',
+                display: 'block',
+                position: 'absolute',
+                bottom: '-20px',
+                right: '15px',
+                width: '20px',
+                height: '20px',
+                transform: 'translateY(-50%) rotate(45deg)',
+                backgroundColor: 'white',
+                outline: 'solid 1px',
+                zIndex: 0,
+              }}
+            ></span>
+
+            <Picker
+              data={data}
+              theme="light"
+              emojiSize={20}
+              emojiButtonSize={30}
+              previewPosition={'none'}
+              onEmojiSelect={addEmoji}
+              onClickOutside={() => setPickerShown(false)}
+            />
+          </div>
+        ) : (
+          ''
+        )}
+
+        <IconButton
+          onClick={() => {
+            setTimeout(() => {
+              setPickerShown(true)
+            }, 10)
+          }}
+        >
+          <i className="fa-regular fa-face-smile"></i>
+        </IconButton>
         <IconButton onClick={sendMessage}>
           <SendIcon />
         </IconButton>
