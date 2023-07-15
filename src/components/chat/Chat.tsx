@@ -111,10 +111,10 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
       <Box
         sx={{
           width: '100%',
-          height: 60,
+          maxHeig: '100%',
           backgroundColor: '#ffffff',
           boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.1)',
-          padding: 2,
+          padding: 1,
           display: 'flex',
           alignItems: 'center',
         }}
@@ -124,6 +124,8 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
             flex: 1,
             marginRight: 2,
           }}
+          multiline
+          maxRows={4}
           placeholder="Type a message"
           autoComplete="off"
           variant="standard"
@@ -152,7 +154,7 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
                 display: 'block',
                 position: 'absolute',
                 bottom: '-20px',
-                right: '15px',
+                right: '8px',
                 width: '20px',
                 height: '20px',
                 transform: 'translateY(-50%) rotate(45deg)',
