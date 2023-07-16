@@ -5,7 +5,7 @@ import { useEffect, useState, useContext } from 'react'
 import { SocketContext } from '../../../routes/PrivateRoutesWrapper'
 import { toast } from 'react-toastify'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Conversation } from './conversation'
+import { Conversation } from './Conversation'
 
 interface Props {
   convosMenuAnchor: HTMLElement | null
