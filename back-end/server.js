@@ -31,6 +31,7 @@ const io = socketIO(server, {
   cors: {
     origin: '*',
   },
+  maxHttpBufferSize: 1e8,
 })
 
 require('./Sockets/socket')(io)
