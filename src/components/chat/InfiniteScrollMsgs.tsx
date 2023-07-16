@@ -90,9 +90,13 @@ export const InfiniteScrollMsgs = ({
     })
     socket?.on('messageSentResponse', (data) => {
       if (!data.succes) {
+        toast.dismiss('fileUpload')
         toast.error('there was an error please try again later ')
       } else {
         setMessages((old) => old.concat(data.message))
+        setTimeout(() => {
+          toast.dismiss('fileUpload')
+        }, 500)
         if (TextMsgRef.current) {
           TextMsgRef.current.value = ''
         }
@@ -137,6 +141,7 @@ export const InfiniteScrollMsgs = ({
             return (
               <MsgReceived
                 content={msg.content}
+                files={msg.files}
                 isFirst={FirstReceived == msg._id}
                 img={recipient.ProfilePath}
                 key={index}
@@ -150,6 +155,7 @@ export const InfiniteScrollMsgs = ({
             return (
               <MsgSent
                 content={msg.content}
+                files={msg.files}
                 isFirst={FirstSent == msg._id}
                 img={senderProfile}
                 key={index}
