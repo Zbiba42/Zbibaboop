@@ -55,10 +55,6 @@ const Messages = (io, socket) => {
             }
           )
           messageData.files.push({ name: file.fileName, path: fileDestination })
-          const message = await Message.create(messageData)
-          conversation.messages.push(message)
-          await conversation.save()
-          io.to(data.recipient).emit('receiveMessage', message)
         } catch (error) {
           io.to(data.sender).emit('messageSentResponse', { succes: false })
         }
