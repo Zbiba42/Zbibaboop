@@ -132,37 +132,53 @@ export const InfiniteScrollMsgs = ({
             Hi!
           </h3>
         )}
-        {messages.map((msg: any, index) => {
-          if (msg.sender == recipient._id) {
-            if (FirstReceived == null) {
-              FirstReceived = msg._id
-              FirstSent = null
+        {messages.map(
+          (
+            msg: {
+              sender: string
+              content: string
+              files: Array<{
+                name: string
+                path: string
+              }>
+              timestamp: string
+              _id: string
+            },
+            index
+          ) => {
+            if (msg.sender == recipient._id) {
+              if (FirstReceived == null) {
+                FirstReceived = msg._id
+                FirstSent = null
+              }
+              return (
+                <MsgReceived
+                  content={msg.content}
+                  files={msg.files}
+                  isFirst={FirstReceived == msg._id}
+                  img={recipient.ProfilePath}
+                  timestamp={msg.timestamp}
+                  key={index}
+                />
+              )
+            } else {
+              if (FirstSent == null) {
+                FirstSent = msg._id
+                FirstReceived = null
+              }
+              return (
+                <MsgSent
+                  content={msg.content}
+                  files={msg.files}
+                  isFirst={FirstSent == msg._id}
+                  img={senderProfile}
+                  timestamp={msg.timestamp}
+                  key={index}
+                />
+              )
             }
-            return (
-              <MsgReceived
-                content={msg.content}
-                files={msg.files}
-                isFirst={FirstReceived == msg._id}
-                img={recipient.ProfilePath}
-                key={index}
-              />
-            )
-          } else {
-            if (FirstSent == null) {
-              FirstSent = msg._id
-              FirstReceived = null
-            }
-            return (
-              <MsgSent
-                content={msg.content}
-                files={msg.files}
-                isFirst={FirstSent == msg._id}
-                img={senderProfile}
-                key={index}
-              />
-            )
           }
-        })}
+        )}
       </InfiniteScroll>
     </Box>
   )
