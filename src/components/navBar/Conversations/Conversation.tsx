@@ -70,11 +70,18 @@ export const Conversation = ({ convo }: Props) => {
   }, [])
   return (
     <div
-      className="p-2 m-2 rounded-lg border flex flex-wrap cursor-pointer hover:bg-gray-100"
+      className={
+        convo.messages[0].sender != sender?._id
+          ? 'relative p-2 m-2 rounded-lg border flex flex-wrap cursor-pointer hover:bg-gray-100'
+          : 'relative p-2 m-2 rounded-lg border flex flex-wrap cursor-pointer bg-gray-100'
+      }
       onClick={() => {
         dispatch(AddChat({ recipient: sender }))
       }}
     >
+      {convo.messages[0].sender == sender?._id && (
+        <div className="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full"></div>
+      )}
       <img
         src={serverUrl + sender?.ProfilePath}
         alt=""

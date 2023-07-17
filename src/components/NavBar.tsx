@@ -20,6 +20,7 @@ export const NavBar = () => {
   const animateContext = useContext(HandleProfileClickContext)
 
   const [notifCount, setNotifCount] = useState<number>(0)
+  const [msgCount, setMsgCount] = useState<number>(0)
   const [profile, setProfile] = useState('')
   const [profileAnchor, setProfileAnchor] = React.useState<null | HTMLElement>(
     null
@@ -90,7 +91,7 @@ export const NavBar = () => {
         component={Link}
         onClick={handleConvosMenuClick}
       >
-        <StyledBadge badgeContent={0} color="info">
+        <StyledBadge badgeContent={msgCount} color="info">
           <i className="fa-regular fa-message text-xl m-1"></i>
         </StyledBadge>
         <h4>Messages</h4>
@@ -98,6 +99,7 @@ export const NavBar = () => {
       {/* Convos Menu */}
       <ConversationsMenu
         convosMenuAnchor={convosMenuAnchor}
+        setMsgCount={setMsgCount}
         handleConvosMenuClose={handleConvosMenuClose}
       />
 

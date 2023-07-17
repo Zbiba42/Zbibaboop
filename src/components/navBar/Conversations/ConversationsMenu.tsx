@@ -6,15 +6,18 @@ import { SocketContext } from '../../../routes/PrivateRoutesWrapper'
 import { toast } from 'react-toastify'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Conversation } from './Conversation'
+import jwtDecode from 'jwt-decode'
 
 interface Props {
   convosMenuAnchor: HTMLElement | null
   handleConvosMenuClose: React.Dispatch<React.SetStateAction<number>>
+  setMsgCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const ConversationsMenu = ({
   convosMenuAnchor,
   handleConvosMenuClose,
+  setMsgCount,
 }: Props) => {
   const open = Boolean(convosMenuAnchor)
   const socket = useContext(SocketContext)
@@ -23,18 +26,34 @@ export const ConversationsMenu = ({
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const getConvos = async () => {
-    try {
-      const { data } = await axios.get(serverUrl + '/api/Conversation/convos', {
-        params: {
-          page: page,
-        },
-      })
-      if (data.data.length === 0) {
-        setHasMore(false)
+    const accessToken = sessionStorage.getItem('AccessToken')
+    const decodedToken = accessToken
+      ? jwtDecode<{ id: string }>(accessToken)
+      : null
+
+    if (decodedToken) {
+      try {
+        const { data } = await axios.get(
+          serverUrl + '/api/Conversation/convos',
+          {
+            params: {
+              page: page,
+            },
+          }
+        )
+        if (data.data.length === 0) {
+          setHasMore(false)
+        }
+        console.log(decodedToken)
+        const unreadCount = data.data.filter(
+          (convo: { messages: Array<{ sender: string }> }) =>
+            convo.messages[0].sender != decodedToken.id
+        ).length
+        setMsgCount(unreadCount)
+        setConversations(data.data)
+      } catch (error: any) {
+        toast.error(error.message)
       }
-      setConversations(data.data)
-    } catch (error: any) {
-      toast.error(error.message)
     }
   }
   const getNextPage = async () => {
@@ -54,13 +73,15 @@ export const ConversationsMenu = ({
     }
   }
   useEffect(() => {
-    socket?.on('receiveMessage', () => {
+    if (socket) {
+      socket.on('receiveMessage', () => {
+        getConvos()
+      })
+      socket.on('messageSentResponse', () => {
+        getConvos()
+      })
       getConvos()
-    })
-    socket?.on('messageSentResponse', () => {
-      getConvos()
-    })
-    getConvos()
+    }
   }, [socket])
   return (
     <Menu
