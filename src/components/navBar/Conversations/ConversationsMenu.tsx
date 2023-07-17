@@ -118,6 +118,7 @@ export const ConversationsMenu = ({
               _id: string
               messages: Array<{
                 content: string
+                files: Array<string>
                 timestamp: string
                 sender: string
                 type: string

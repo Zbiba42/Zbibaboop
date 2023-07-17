@@ -13,6 +13,7 @@ interface Props {
     _id: string
     messages: Array<{
       content: string
+      files: Array<string>
       timestamp: string
       sender: string
       type: string
@@ -100,7 +101,8 @@ export const Conversation = ({ convo }: Props) => {
           }}
         >
           {convo.messages[0].sender === sender?._id ? '' : 'You: '}
-          {convo.messages[0].content} .
+          {convo.messages[0].content ? convo.messages[0].content + ' .' : ''}
+          {convo.messages[0].files.length > 0 ? 'attachment .' : ''}
           <span className="text-sm font-medium leading-5 text-gray-900 m-1 mr-0">
             {getTimeElapsed(convo.messages[0].timestamp)}
           </span>
