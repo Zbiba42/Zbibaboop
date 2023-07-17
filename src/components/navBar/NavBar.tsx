@@ -1,19 +1,19 @@
 import { Box } from '@mui/material'
 
 import jwtDecode from 'jwt-decode'
-import { NavBox } from '../styles/navStyle'
+import { NavBox } from '../../styles/navStyle'
 import { Link } from 'react-router-dom'
 import Badge, { BadgeProps } from '@mui/material/Badge'
 import { styled } from '@mui/material/styles'
 import React, { useContext, useEffect, useState } from 'react'
-import { HandleProfileClickContext } from '../routes/AppRoutes'
-import { serverUrl } from '../config'
+import { HandleProfileClickContext } from '../../routes/AppRoutes'
+import { serverUrl } from '../../config'
 import axios from 'axios'
 
-import { Notifications } from './navBar/Notifications/Notifications'
-import { SocketContext } from '../routes/PrivateRoutesWrapper'
-import { ProfileMenu } from './navBar/Profile/ProfileMenu'
-import { ConversationsMenu } from './navBar/Conversations/ConversationsMenu'
+import { Notifications } from './Notifications/Notifications'
+import { SocketContext } from '../../routes/PrivateRoutesWrapper'
+import { ProfileMenu } from './Profile/ProfileMenu'
+import { ConversationsMenu } from './Conversations/ConversationsMenu'
 
 export const NavBar = () => {
   const socket = useContext(SocketContext)

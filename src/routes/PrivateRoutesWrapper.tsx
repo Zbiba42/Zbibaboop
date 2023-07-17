@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
-import { NavBar } from '../components/NavBar'
+import { NavBar } from '../components/navBar/NavBar'
 import { SideBar } from '../components/SideBar'
 import { Profile } from '../pages/Profile'
 import { useContext, useEffect, useState } from 'react'
