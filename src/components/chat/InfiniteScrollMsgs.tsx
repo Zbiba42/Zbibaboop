@@ -80,8 +80,8 @@ export const InfiniteScrollMsgs = ({
 
   useEffect(() => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop +=
-        messagesContainerRef.current.scrollHeight / (messages.length / 40)
+      messagesContainerRef.current.scrollTop += 1300
+      // messagesContainerRef.current.scrollHeight - 36 * 40
     }
   }, [page])
 
