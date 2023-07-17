@@ -56,12 +56,15 @@ export const InfiniteScrollMsgs = ({
 
   const getNextMessages = async () => {
     try {
-      const { data } = await axios.get(serverUrl + '/api/messages/', {
-        params: {
-          recipient: recipient._id,
-          page: page + 1,
-        },
-      })
+      const { data } = await axios.get(
+        serverUrl + '/api/Conversation/messages',
+        {
+          params: {
+            recipient: recipient._id,
+            page: page + 1,
+          },
+        }
+      )
 
       if (data.data.messages.length === 0) {
         setHasMore(false)
