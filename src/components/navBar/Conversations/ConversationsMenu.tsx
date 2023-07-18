@@ -50,7 +50,7 @@ export const ConversationsMenu = ({
             convo.messages[0].sender != decodedToken.id
         ).length
         setMsgCount(unreadCount)
-        setConversations(data.data)
+        setConversations(data.data.reverse())
       } catch (error: any) {
         toast.error(error.message)
       }
@@ -67,7 +67,7 @@ export const ConversationsMenu = ({
         setHasMore(false)
       }
       setPage((old) => old + 1)
-      setConversations((old) => old.concat(data.data))
+      setConversations((old) => old.concat(data.data.reverse()))
     } catch (error: any) {
       toast.error(error.message)
     }
