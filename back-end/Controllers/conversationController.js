@@ -1,5 +1,5 @@
 const Conversation = require('../models/conversation')
-
+const Message = require('../models/message')
 const getConvos = async (req, res) => {
   const pageSize = 10
   const pageNumber = req.query.page
@@ -45,4 +45,14 @@ const getMessages = async (req, res) => {
   }
 }
 
-module.exports = { getConvos, getMessages }
+const removeMessage = async (req, res) => {
+  const id = req.body.id
+  try {
+    const data = await Message.deleteOne({ _id: id })
+    res.status(200).json({ succes: true, data: data })
+  } catch (error) {
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
+module.exports = { getConvos, getMessages, removeMessage }
