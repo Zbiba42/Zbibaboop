@@ -1,22 +1,34 @@
-import { Tooltip } from '@mui/material'
+import { IconButton, Tooltip, Menu, MenuItem } from '@mui/material'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { serverUrl } from '../../../config'
 import { FileComponentReceived } from './FileComponentReceived'
+import { useState } from 'react'
 
 interface Props {
   img: string
-  content: string
-  files: Array<{ name: string; path: string }>
+  msg: {
+    sender: string
+    content: string
+    files: Array<{
+      name: string
+      path: string
+    }>
+    timestamp: string
+    _id: string
+  }
   isFirst: boolean
-  timestamp: string
+  deleteMessage: (id: any) => Promise<void>
 }
 
-export const MsgReceived = ({
-  img,
-  content,
-  files,
-  isFirst,
-  timestamp,
-}: Props) => {
+export const MsgReceived = ({ img, msg, isFirst, deleteMessage }: Props) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
   return (
     <div className="chat-message mb-1">
       <div className="flex items-end">
@@ -28,7 +40,7 @@ export const MsgReceived = ({
           }
         >
           <Tooltip
-            title={new Date(timestamp).toLocaleString('en-US', {
+            title={new Date(msg.timestamp).toLocaleString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
@@ -39,7 +51,7 @@ export const MsgReceived = ({
             placement="right"
           >
             <div>
-              {content && (
+              {msg.content && (
                 <span
                   className={
                     isFirst
@@ -47,14 +59,45 @@ export const MsgReceived = ({
                       : 'px-4 py-2 rounded-lg inline-block rounded-tl-none bg-gray-300 text-gray-600'
                   }
                 >
-                  {content}
+                  {msg.content}
                 </span>
               )}
-              {files.length > 0 && (
-                <FileComponentReceived files={files} isFirst={isFirst} />
+              {msg.files.length > 0 && (
+                <FileComponentReceived files={msg.files} isFirst={isFirst} />
               )}
+              <IconButton onClick={handleClick}>
+                <MoreVertIcon fontSize="small" />
+              </IconButton>
             </div>
           </Tooltip>
+
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          >
+            <MenuItem onClick={handleClose}>Edit</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose()
+                setTimeout(() => {
+                  deleteMessage(msg._id)
+                }, 10)
+              }}
+            >
+              Delete
+            </MenuItem>
+          </Menu>
         </div>
         {isFirst && (
           <img
