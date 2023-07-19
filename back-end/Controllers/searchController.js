@@ -41,9 +41,10 @@ const searchFriends = async (req, res) => {
   const userId = req.payload.id
   const searchTerm = req.query.searchTerm
   try {
-    const user = await User.findOne({ _id: userId }, { friends: 1 }).populate(
-      'friends'
-    )
+    const user = await User.findOne({ _id: userId }, { friends: 1 }).populate({
+      path: 'friends',
+      select: 'ProfilePath Fullname City Country',
+    })
 
     const matchingFriends = user.friends.filter((friend) =>
       friend.Fullname.toLowerCase().includes(searchTerm.toLowerCase())
