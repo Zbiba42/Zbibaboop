@@ -78,10 +78,33 @@ export const InfiniteScrollMsgs = ({
     }
   }
 
+  const deleteMessage = async (id: string) => {
+    try {
+      const { data } = await axios.post(
+        serverUrl + '/api/Conversation/messages/remove',
+        { id: id }
+      )
+      if (data.succes) {
+        getMessages()
+        toast.success('message deleted successfully')
+      }
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
   useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop += 1300
-      // messagesContainerRef.current.scrollHeight - 36 * 40
+    if (page != 1) {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop += 1300
+        // messagesContainerRef.current.scrollHeight - 36 * 40
+      }
+    } else {
+      if (messagesContainerRef.current) {
+        getMessages()
+        messagesContainerRef.current.scrollTop +=
+          messagesContainerRef.current.scrollHeight
+      }
     }
   }, [page])
 
@@ -156,12 +179,11 @@ export const InfiniteScrollMsgs = ({
               }
               return (
                 <MsgReceived
-                  content={msg.content}
-                  files={msg.files}
+                  msg={msg}
                   isFirst={FirstReceived == msg._id}
                   img={recipient.ProfilePath}
-                  timestamp={msg.timestamp}
                   key={index}
+                  deleteMessage={deleteMessage}
                 />
               )
             } else {
@@ -171,18 +193,27 @@ export const InfiniteScrollMsgs = ({
               }
               return (
                 <MsgSent
-                  content={msg.content}
-                  files={msg.files}
+                  msg={msg}
                   isFirst={FirstSent == msg._id}
                   img={senderProfile}
-                  timestamp={msg.timestamp}
                   key={index}
+                  deleteMessage={deleteMessage}
                 />
               )
             }
           }
         )}
       </InfiniteScroll>
+      {page != 1 && (
+        <div
+          className="absolute left-36 w-10 h-10 flex items-center justify-center rounded-full bg-gray-300 cursor-pointer"
+          onClick={() => {
+            setPage(1)
+          }}
+        >
+          <i className="fa-solid fa-arrow-down"></i>
+        </div>
+      )}
     </Box>
   )
 }
