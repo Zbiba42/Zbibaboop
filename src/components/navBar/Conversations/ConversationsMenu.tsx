@@ -44,7 +44,6 @@ export const ConversationsMenu = ({
         if (data.data.length === 0) {
           setHasMore(false)
         }
-        console.log(decodedToken)
         const unreadCount = data.data.filter(
           (convo: { messages: Array<{ sender: string }> }) =>
             convo.messages[0].sender != decodedToken.id
