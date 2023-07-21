@@ -93,6 +93,21 @@ export const InfiniteScrollMsgs = ({
     }
   }
 
+  const editMessage = async (id: string, content: string | undefined) => {
+    try {
+      const { data } = await axios.post(
+        serverUrl + '/api/Conversation/messages/edit',
+        { id: id, content: content }
+      )
+      if (data.succes) {
+        getMessages()
+        toast.success('message updated successfully')
+      }
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
   useEffect(() => {
     if (page != 1) {
       if (messagesContainerRef.current) {
@@ -183,7 +198,6 @@ export const InfiniteScrollMsgs = ({
                   isFirst={FirstReceived == msg._id}
                   img={recipient.ProfilePath}
                   key={index}
-                  deleteMessage={deleteMessage}
                 />
               )
             } else {
@@ -198,6 +212,7 @@ export const InfiniteScrollMsgs = ({
                   img={senderProfile}
                   key={index}
                   deleteMessage={deleteMessage}
+                  editMessage={editMessage}
                 />
               )
             }
