@@ -55,4 +55,15 @@ const removeMessage = async (req, res) => {
   }
 }
 
-module.exports = { getConvos, getMessages, removeMessage }
+const editMessage = async (req, res) => {
+  const id = req.body.id
+  const newContent = req.body.content
+  try {
+    const data = await Message.updateOne({ _id: id }, { content: newContent })
+    res.status(200).json({ succes: true, data: data })
+  } catch (error) {
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
+module.exports = { getConvos, getMessages, removeMessage, editMessage }
