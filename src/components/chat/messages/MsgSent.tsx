@@ -1,8 +1,8 @@
-import { IconButton, Tooltip, Menu, MenuItem } from '@mui/material'
+import { IconButton, Tooltip, Menu, MenuItem, TextField } from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { serverUrl } from '../../../config'
 import { FileComponentSent } from './FileComponentSent'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 interface Props {
   img: string
   msg: {
@@ -17,9 +17,18 @@ interface Props {
   }
   isFirst: boolean
   deleteMessage: (id: any) => Promise<void>
+  editMessage: (id: string, content: string | undefined) => Promise<void>
 }
 
-export const MsgSent = ({ img, msg, isFirst, deleteMessage }: Props) => {
+export const MsgSent = ({
+  img,
+  msg,
+  isFirst,
+  deleteMessage,
+  editMessage,
+}: Props) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -53,17 +62,69 @@ export const MsgSent = ({ img, msg, isFirst, deleteMessage }: Props) => {
               <IconButton onClick={handleClick}>
                 <MoreVertIcon fontSize="small" />
               </IconButton>
-              {msg.content && (
-                <span
-                  className={
-                    isFirst
-                      ? 'px-4 py-2 rounded-lg inline-block bg-blue-600 text-white'
-                      : 'px-4 py-2 rounded-lg inline-block rounded-tr-none bg-blue-600 text-white'
-                  }
-                >
-                  {msg.content}
-                </span>
-              )}
+              {isEditing
+                ? msg.content.length > 0 && (
+                    <>
+                      <span
+                        className={
+                          isFirst
+                            ? 'px-4 py-2 rounded-lg inline-block bg-blue-600 text-white'
+                            : 'px-4 py-2 rounded-lg inline-block rounded-tr-none bg-blue-600 text-white'
+                        }
+                      >
+                        <TextField
+                          defaultValue={msg.content}
+                          sx={{ color: 'white' }}
+                          placeholder="Type a message"
+                          autoComplete="off"
+                          inputRef={inputRef}
+                          variant="standard"
+                          onKeyDown={(e) => {
+                            if (e.key == 'Enter') {
+                              msg.content != inputRef.current?.value &&
+                                editMessage(msg._id, inputRef.current?.value)
+                              setIsEditing(false)
+                            }
+                            if (e.key === 'Escape') {
+                              setIsEditing(false)
+                            }
+                          }}
+                        />
+                      </span>
+                      <span className="flex items-end justify-end gap-3">
+                        <h6
+                          className="m-1 text-blue-500 cursor-pointer hover:text-blue-900"
+                          onClick={() => {
+                            setIsEditing(false)
+                          }}
+                        >
+                          Cancel
+                        </h6>
+                        <h6
+                          className="m-1 text-blue-500 cursor-pointer hover:text-blue-900"
+                          onClick={() => {
+                            msg.content != inputRef.current?.value &&
+                              editMessage(msg._id, inputRef.current?.value)
+                            setIsEditing(false)
+                          }}
+                        >
+                          Save
+                        </h6>
+                      </span>
+                    </>
+                  )
+                : msg.content.length > 0 && (
+                    <span
+                      className={
+                        isFirst
+                          ? 'px-4 py-2 rounded-lg inline-block bg-blue-600 text-white'
+                          : 'px-4 py-2 rounded-lg inline-block rounded-tr-none bg-blue-600 text-white'
+                      }
+                    >
+                      {msg.content}
+                    </span>
+                  )}
+
               {msg.files.length > 0 && (
                 <FileComponentSent
                   files={msg.files}
@@ -88,7 +149,14 @@ export const MsgSent = ({ img, msg, isFirst, deleteMessage }: Props) => {
               horizontal: 'right',
             }}
           >
-            <MenuItem onClick={handleClose}>Edit</MenuItem>
+            <MenuItem
+              onClick={() => {
+                setIsEditing(true)
+                handleClose()
+              }}
+            >
+              Edit
+            </MenuItem>
             <MenuItem
               onClick={() => {
                 handleClose()
