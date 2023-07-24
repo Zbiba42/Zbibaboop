@@ -159,6 +159,7 @@ export const InfiniteScrollMsgs = ({
         display: 'flex',
         flexDirection: 'column-reverse',
         p: 1,
+        scrollBehavior: 'smooth',
       }}
     >
       <InfiniteScroll
