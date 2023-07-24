@@ -14,6 +14,19 @@ interface Props {
   setMsgCount: React.Dispatch<React.SetStateAction<number>>
 }
 
+export interface Conversation {
+  _id: string
+  participants: string[]
+  messages: {
+    _id: string
+    sender: string
+    recipient: string
+    content: string
+    files: string[]
+    timestamp: string
+  }[]
+}
+
 export const ConversationsMenu = ({
   convosMenuAnchor,
   handleConvosMenuClose,
@@ -48,8 +61,19 @@ export const ConversationsMenu = ({
           (convo: { messages: Array<{ sender: string }> }) =>
             convo.messages[0].sender != decodedToken.id
         ).length
+
+        const sortedConversations = data.data.sort(
+          (a: Conversation, b: Conversation) => {
+            const timestampA = new Date(a.messages[0].timestamp).getTime()
+
+            const timestampB = new Date(b.messages[0].timestamp).getTime()
+
+            return timestampB - timestampA
+          }
+        )
+
         setMsgCount(unreadCount)
-        setConversations(data.data.reverse())
+        setConversations(sortedConversations)
       } catch (error: any) {
         toast.error(error.message)
       }
@@ -65,8 +89,19 @@ export const ConversationsMenu = ({
       if (data.data.length === 0) {
         setHasMore(false)
       }
+
+      const sortedConversations = data.data.sort(
+        (a: Conversation, b: Conversation) => {
+          const timestampA = new Date(a.messages[0].timestamp).getTime()
+
+          const timestampB = new Date(b.messages[0].timestamp).getTime()
+
+          return timestampB - timestampA
+        }
+      )
+
+      setConversations(sortedConversations)
       setPage((old) => old + 1)
-      setConversations((old) => old.concat(data.data.reverse()))
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -132,26 +167,13 @@ export const ConversationsMenu = ({
           loader={''}
           scrollableTarget="ConvosContainer"
         >
-          {conversations.map(
-            (convo: {
-              participants: Array<string>
-              _id: string
-              messages: Array<{
-                content: string
-                files: Array<string>
-                timestamp: string
-                sender: string
-                type: string
-                _id: string
-              }>
-            }) => {
-              return (
-                <>
-                  <Conversation convo={convo} key={convo._id} />
-                </>
-              )
-            }
-          )}
+          {conversations.map((convo: Conversation) => {
+            return (
+              <>
+                <Conversation convo={convo} key={convo._id} />
+              </>
+            )
+          })}
         </InfiniteScroll>
       </div>
     </Menu>
