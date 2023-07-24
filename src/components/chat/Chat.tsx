@@ -75,7 +75,7 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
     <Box
       sx={{
         backgroundColor: 'white',
-        width: 320,
+        width: 325,
         marginLeft: '20px',
         border: '1px solid grey',
         boxShadow: 2,
