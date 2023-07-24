@@ -6,20 +6,10 @@ import jwtDecode from 'jwt-decode'
 import { Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { AddChat } from '../../../redux/chat'
+import { Conversation as ConversationType } from './ConversationsMenu'
 
 interface Props {
-  convo: {
-    participants: Array<string>
-    _id: string
-    messages: Array<{
-      content: string
-      files: Array<string>
-      timestamp: string
-      sender: string
-      type: string
-      _id: string
-    }>
-  }
+  convo: ConversationType
 }
 
 export const Conversation = ({ convo }: Props) => {
