@@ -39,13 +39,13 @@ export const MsgReceived = ({ img, msg, isFirst }: Props) => {
             arrow
             placement="right"
           >
-            <div>
+            <div className="flex flex-row flex-nowrap align-center">
               {msg.content && (
                 <span
                   className={
                     isFirst
-                      ? 'px-4 py-2 rounded-lg inline-block bg-gray-300 text-gray-600'
-                      : 'px-4 py-2 rounded-lg inline-block rounded-tl-none bg-gray-300 text-gray-600'
+                      ? 'px-4 py-2 rounded-lg inline-block bg-gray-300 text-gray-600 break-all'
+                      : 'px-4 py-2 rounded-lg inline-block rounded-tl-none bg-gray-300 text-gray-600 break-all'
                   }
                 >
                   {msg.content}

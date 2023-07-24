@@ -58,8 +58,8 @@ export const MsgSent = ({
             arrow
             placement="left"
           >
-            <div>
-              <IconButton onClick={handleClick}>
+            <div className="flex flex-row flex-nowrap align-center">
+              <IconButton onClick={handleClick} sx={{ m: 0, p: 0 }}>
                 <MoreVertIcon fontSize="small" />
               </IconButton>
               {isEditing
@@ -74,10 +74,10 @@ export const MsgSent = ({
                       >
                         <TextField
                           defaultValue={msg.content}
-                          sx={{ color: 'white' }}
                           placeholder="Type a message"
                           autoComplete="off"
                           inputRef={inputRef}
+                          multiline
                           variant="standard"
                           onKeyDown={(e) => {
                             if (e.key == 'Enter') {
@@ -89,27 +89,10 @@ export const MsgSent = ({
                               setIsEditing(false)
                             }
                           }}
+                          inputProps={{
+                            style: { color: 'white' },
+                          }}
                         />
-                      </span>
-                      <span className="flex items-end justify-end gap-3">
-                        <h6
-                          className="m-1 text-blue-500 cursor-pointer hover:text-blue-900"
-                          onClick={() => {
-                            setIsEditing(false)
-                          }}
-                        >
-                          Cancel
-                        </h6>
-                        <h6
-                          className="m-1 text-blue-500 cursor-pointer hover:text-blue-900"
-                          onClick={() => {
-                            msg.content != inputRef.current?.value &&
-                              editMessage(msg._id, inputRef.current?.value)
-                            setIsEditing(false)
-                          }}
-                        >
-                          Save
-                        </h6>
                       </span>
                     </>
                   )
@@ -117,8 +100,8 @@ export const MsgSent = ({
                     <span
                       className={
                         isFirst
-                          ? 'px-4 py-2 rounded-lg inline-block bg-blue-600 text-white'
-                          : 'px-4 py-2 rounded-lg inline-block rounded-tr-none bg-blue-600 text-white'
+                          ? 'px-4 py-2 rounded-lg inline-block bg-blue-600 text-white break-all'
+                          : 'px-4 py-2 rounded-lg inline-block rounded-tr-none bg-blue-600 text-white break-all'
                       }
                     >
                       {msg.content}
@@ -134,6 +117,28 @@ export const MsgSent = ({
               )}
             </div>
           </Tooltip>
+          {isEditing && (
+            <span className="flex items-end justify-end gap-4 w-full">
+              <h6
+                className="m-1 text-blue-500 cursor-pointer hover:text-blue-900"
+                onClick={() => {
+                  setIsEditing(false)
+                }}
+              >
+                Cancel
+              </h6>
+              <h6
+                className="m-1 text-blue-500 cursor-pointer hover:text-blue-900"
+                onClick={() => {
+                  msg.content != inputRef.current?.value &&
+                    editMessage(msg._id, inputRef.current?.value)
+                  setIsEditing(false)
+                }}
+              >
+                Save
+              </h6>
+            </span>
+          )}
           <Menu
             id="demo-positioned-menu"
             aria-labelledby="demo-positioned-button"
