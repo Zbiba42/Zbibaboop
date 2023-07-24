@@ -62,7 +62,6 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
         }
       })
 
-      console.log(message)
       socket?.emit('sendMessage', message)
       toast.info('uploading please wait ...', {
         toastId: 'fileUpload',
@@ -117,7 +116,7 @@ export const Chat = ({ senderProfile, sender, recipient }: Props) => {
       <Box
         sx={{
           width: '100%',
-          height: 60,
+
           maxHeig: '100%',
           backgroundColor: '#ffffff',
           boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.1)',
