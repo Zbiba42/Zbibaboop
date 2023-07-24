@@ -134,12 +134,15 @@ export const InfiniteScrollMsgs = ({
         toast.dismiss('fileUpload')
         toast.error('there was an error please try again later ')
       } else {
-        setMessages((old) => old.concat(data.message))
-        setTimeout(() => {
-          toast.dismiss('fileUpload')
-        }, 500)
-        if (TextMsgRef.current) {
-          TextMsgRef.current.value = ''
+        if (data.message.recipient === recipient._id) {
+          setMessages((old) => old.concat(data.message))
+
+          setTimeout(() => {
+            toast.dismiss('fileUpload')
+          }, 500)
+          if (TextMsgRef.current) {
+            TextMsgRef.current.value = ''
+          }
         }
       }
     })
