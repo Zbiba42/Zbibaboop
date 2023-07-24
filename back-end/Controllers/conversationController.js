@@ -9,15 +9,11 @@ const getConvos = async (req, res) => {
       {
         participants: { $all: [id] },
       },
-      { participants: 1, messages: { $slice: -1 } },
-      {
-        options: {
-          limit: pageSize,
-          skip: (pageNumber - 1) * pageSize,
-          sort: { 'messages.timestamp': -1 },
-        },
-      }
-    ).populate('messages')
+      { participants: 1, messages: { $slice: -1 } }
+    )
+      .limit(pageSize)
+      .skip((pageNumber - 1) * pageSize)
+      .populate('messages')
     res.status(200).json({ succes: true, data: Conversations })
   } catch (error) {
     res.status(200).json({ succes: true, error: error.message })
