@@ -9,6 +9,7 @@ import { TabPanel } from './TabContent'
 import { About } from './tabs/About'
 import { ProfileEdit } from './update/ProfileEdit'
 import { Friends } from './tabs/Friends'
+import { Posts } from './tabs/Posts'
 
 interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>
@@ -106,7 +107,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          Posts
+          <Posts profile={profile} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <About profile={profile} />
