@@ -3,3 +3,6 @@
   margin: 0;
   text-align: center;
 }
+.PostsEmogiContainer em-emoji-picker {
+  height: 300px;
+}
