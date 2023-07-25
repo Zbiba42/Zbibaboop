@@ -19,6 +19,8 @@ const Auth = require('./Routes/Auth')
 const User = require('./Routes/user')
 const Search = require('./Routes/search')
 const Conversation = require('./Routes/conversation')
+const Posts = require('./Routes/post')
+
 app.use('/api/auth', Auth)
 
 app.use('/api/search', authToken, Search)
@@ -26,6 +28,8 @@ app.use('/api/search', authToken, Search)
 app.use('/api/user', authToken, User)
 
 app.use('/api/Conversation', authToken, Conversation)
+
+app.use('/api/Posts', authToken, Posts)
 
 const io = socketIO(server, {
   cors: {
