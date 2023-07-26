@@ -9,7 +9,7 @@ import { TabPanel } from './TabContent'
 import { About } from './tabs/About'
 import { ProfileEdit } from './update/ProfileEdit'
 import { Friends } from './tabs/Friends'
-import { Posts } from './tabs/Posts'
+import { Posts } from './tabs/posts/Posts'
 
 interface Props {
   setAnimate?: React.Dispatch<React.SetStateAction<string>>
