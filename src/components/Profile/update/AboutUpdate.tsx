@@ -6,6 +6,7 @@ import { Button, TextField } from '@mui/material'
 import { ChangeEvent } from 'react'
 import axios from 'axios'
 import { profile } from '../ProfileContent'
+import { toast } from 'react-toastify'
 interface CitySearchOption {
   value: string
   label: string
@@ -59,8 +60,8 @@ export const AboutUpdate = ({
         )
         setCities(formattedCities)
       }
-    } catch (error) {
-      console.error('Error:', error)
+    } catch (error: any) {
+      toast.error(error.message)
     }
   }
   return (

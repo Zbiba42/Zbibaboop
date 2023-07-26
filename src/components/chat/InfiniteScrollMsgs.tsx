@@ -74,7 +74,7 @@ export const InfiniteScrollMsgs = ({
 
       setMessages(data.data.messages.reverse().concat(messages))
     } catch (error) {
-      console.error('Error fetching next messages:', error)
+      toast.error('Error fetching next messages')
     }
   }
 
