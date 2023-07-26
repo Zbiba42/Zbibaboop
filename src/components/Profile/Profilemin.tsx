@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { serverUrl } from '../config'
+import { serverUrl } from '../../config'
 import { Typography } from '@mui/material'
 
 interface Props {

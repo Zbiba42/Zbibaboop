@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import { profile } from '../Profile/ProfileContent'
-import { Profilemin } from '../Profilemin'
+import { Profilemin } from '../Profile/Profilemin'
 interface Props {
   results: Array<profile>
 }

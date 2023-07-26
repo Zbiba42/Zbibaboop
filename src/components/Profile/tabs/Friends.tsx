@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Profilemin } from '../../Profilemin'
+import { Profilemin } from '../Profilemin'
 import { Box } from '@mui/material'
 import { Pagination } from '@mui/material'
 interface Props {
@@ -46,7 +46,7 @@ export const Friends = ({ friends }: Props) => {
         {friendsOnPage?.map((friend) => {
           return (
             <div style={{ flexBasis: '48%' }}>
-              <Profilemin user={friend} />
+              <Profilemin user={friend} key={friend._id} />
             </div>
           )
         })}
