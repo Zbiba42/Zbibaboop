@@ -28,12 +28,35 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
       PostContentRef.current.value += e.native
     }
   }
+  const [previews, setPreviews] = useState<
+    Array<{
+      type: string
+      url: string
+    }>
+  >([])
+
+  const handleFileInputChange = (e: any) => {
+    const files = e.target.files
+    const newPreviews: Array<{ type: string; url: string }> = []
+
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const blobUrl = URL.createObjectURL(file)
+        const preview = { type: file.type, url: blobUrl }
+        newPreviews.push(preview)
+      }
+    }
+
+    setPreviews(newPreviews)
+  }
+
   useEffect(() => {
     AnimateFunction()
   }, [isPostFormOpen])
   return (
     <div className="relative">
-      {pickerShown ? (
+      {pickerShown && (
         <div className="bg-white z-50 absolute top-[-10rem] right-14 outline outline-1 rounded-md PostsEmogiContainer">
           <span
             style={{
@@ -62,8 +85,6 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
             onClickOutside={() => setPickerShown(false)}
           />
         </div>
-      ) : (
-        ''
       )}
       <motion.div
         style={{
@@ -137,19 +158,98 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
               <i className="fa-regular fa-face-smile"></i>
             </IconButton>
           </div>
-          {/* <Box
-          sx={{
-            mt: 1,
-            p: 1,
-            outline: '1px solid grey',
-            boxShadow: 1,
-            borderRadius: 2,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          hna aybano files li pickiti
-        </Box> */}
+
+          {previews.length > 0 && (
+            <>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  width: '95%',
+                  borderRadius: '10px 10px 0 0 ',
+                  overflow: 'hidden',
+                  margin: '0 auto',
+                }}
+              >
+                {previews.slice(0, 2).map((preview, index) => {
+                  return (
+                    <div key={index} className="w-6/12">
+                      {preview.type.includes('image') ? (
+                        <img
+                          src={preview.url}
+                          alt="Preview"
+                          style={{
+                            width: '100%',
+                            height: '150px',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ) : (
+                        <video
+                          controls
+                          style={{
+                            width: '100%',
+                            height: 'auto',
+                          }}
+                        >
+                          <source src={preview.url} />
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  width: '95%',
+                  borderRadius: '0 0 10px 10px',
+                  overflow: 'hidden',
+                  margin: '0 auto',
+                }}
+              >
+                {previews.slice(2, 5).map((preview, index) => {
+                  return (
+                    <div key={index} className="w-4/12 relative">
+                      {index == 2 && (
+                        <div className="w-full h-full absolute flex justify-center items-center  backdrop-blur-sm">
+                          <h3 className="text-xl text-center text-white font-medium m-1">
+                            +{previews.length - 5}
+                          </h3>
+                        </div>
+                      )}
+                      {preview.type.includes('image') ? (
+                        <img
+                          src={preview.url}
+                          alt="Preview"
+                          style={{
+                            width: '100%',
+                            height: '150px',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ) : (
+                        <video
+                          controls={index == 2 ? false : true}
+                          style={{
+                            width: '100%',
+                            height: 'auto',
+                          }}
+                        >
+                          <source src={preview.url} />
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          )}
+
           <Box
             sx={{
               mt: 1,
@@ -190,7 +290,8 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
                     id="images-input"
                     multiple
                     className="hidden"
-                    accept="image/*"
+                    accept="image/*, video/*"
+                    onChange={handleFileInputChange}
                     // ref={filesRef}
                   />
                 </label>
