@@ -30,6 +30,12 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
     }
   }
   const [tagsShown, setTagsShown] = useState<Boolean>(false)
+  const [tags, setTags] = useState<
+    Array<{
+      fullName: string
+      id: string
+    }>
+  >([])
   const [previews, setPreviews] = useState<
     Array<{
       type: string
@@ -89,7 +95,7 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
         </div>
       )}
       {tagsShown && (
-        <div className="bg-white z-50 absolute top-[-13rem] right-14 outline outline-1 rounded-lg ">
+        <div className="bg-white z-50 absolute bottom-[4.3rem] right-28 outline outline-1 rounded-lg ">
           <span
             style={{
               content: '',
@@ -105,7 +111,11 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
               zIndex: 0,
             }}
           ></span>
-          <SearchTags />
+          <SearchTags
+            setTagsShown={setTagsShown}
+            setTags={setTags}
+            tags={tags}
+          />
         </div>
       )}
       <motion.div
@@ -232,7 +242,7 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
                 {previews.slice(2, 5).map((preview, index) => {
                   return (
                     <div key={index} className="w-4/12 relative">
-                      {index == 2 && (
+                      {index == 2 && previews.length - 5 > 0 && (
                         <div className="w-full h-full absolute flex justify-center items-center  backdrop-blur-[1px]">
                           <h3 className="text-xl text-center text-white font-medium m-1">
                             +{previews.length - 5}
@@ -266,6 +276,46 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
                 })}
               </div>
             </>
+          )}
+          {tags.length > 0 && (
+            <Box
+              sx={{
+                mt: 1,
+                p: 1,
+                outline: '1px solid grey',
+                boxShadow: 1,
+                borderRadius: 2,
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}
+            >
+              {tags.map((tag) => {
+                return (
+                  <Tooltip title="remove" placement="right">
+                    <div
+                      className="text-[#272838] flex flex-col space-y-2 border- rounded-xl bg-blue-200 px-2 mx-1 mb-1 cursor-pointer transition-all duration-200 hover:bg-[#D52941] hover:text-white"
+                      onClick={() => {
+                        setTags((prevSelected) =>
+                          prevSelected.filter(
+                            (selected) => selected.id !== tag.id
+                          )
+                        )
+                      }}
+                    >
+                      <span>
+                        <i
+                          className="fa-solid fa-user-xmark fa-sm"
+                          style={{ color: '#808080', marginRight: 10 }}
+                        ></i>
+                        {tag.fullName}{' '}
+                      </span>
+                    </div>
+                  </Tooltip>
+                )
+              })}
+            </Box>
           )}
 
           <Box
