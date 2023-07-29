@@ -2,10 +2,26 @@ import { Box, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import { ChangeEvent, useState } from 'react'
 import { serverUrl } from '../../../../config'
-
+import CloseIcon from '@mui/icons-material/Close'
 import { profile } from '../../ProfileContent'
 
-export const SearchTags = () => {
+interface Props {
+  setTagsShown: React.Dispatch<React.SetStateAction<Boolean>>
+  setTags: React.Dispatch<
+    React.SetStateAction<
+      {
+        fullName: string
+        id: string
+      }[]
+    >
+  >
+  tags: {
+    fullName: string
+    id: string
+  }[]
+}
+
+export const SearchTags = ({ setTagsShown, setTags, tags }: Props) => {
   const [Results, setResults] = useState([])
 
   const handleSearchChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -17,6 +33,22 @@ export const SearchTags = () => {
         },
       })
       setResults(data.data)
+    }
+  }
+  const toggleTagSelect = (friend: profile) => {
+    const isFriendSelected = tags.some((tag) => tag.id === friend._id)
+
+    // If it's selected, remove it from the selected list
+    if (isFriendSelected) {
+      setTags((prevSelected) =>
+        prevSelected.filter((tag) => tag.id !== friend._id)
+      )
+    } else {
+      // If it's not selected, add it to the selected list
+      setTags((prevSelected) => [
+        ...prevSelected,
+        { fullName: friend.Fullname, id: friend._id },
+      ])
     }
   }
   return (
@@ -35,6 +67,13 @@ export const SearchTags = () => {
         position: 'relative',
       }}
     >
+      <button
+        className="absolute right-2 top-2"
+        onClick={() => setTagsShown(false)}
+      >
+        <CloseIcon fontSize="small" sx={{ color: 'black' }} />
+      </button>
+
       <h3 className="text-lg font-medium ">Tag people</h3>
 
       <Box
@@ -55,8 +94,18 @@ export const SearchTags = () => {
       <hr className="w-full" />
       <Box sx={{ overflow: 'scroll', height: '100%' }}>
         {Results.map((friend: profile) => {
+          const isSelected = tags.some((tag) => tag.id == friend._id)
           return (
-            <div className="p-1 m-1 rounded-lg border flex flex-wrap items-center cursor-pointer">
+            <div
+              className={
+                isSelected
+                  ? 'p-1 m-1 rounded-lg border flex flex-wrap items-center cursor-pointer bg-gray-300'
+                  : 'p-1 m-1 rounded-lg border flex flex-wrap items-center cursor-pointer'
+              }
+              onClick={() => {
+                toggleTagSelect(friend)
+              }}
+            >
               <img
                 src={serverUrl + friend.ProfilePath}
                 alt=""
