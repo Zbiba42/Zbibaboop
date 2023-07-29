@@ -54,12 +54,12 @@ export const PrivateRoutesWrapper = () => {
         <NavBar />
         <ChatContainer />
         {location.pathname === '/search' ? '' : <SearchInput />}
-        {animateContext?.animate === 'open' ||
-        animateContext?.animate === 'closing' ? (
-          <Profile />
-        ) : (
+        {/* {animateContext?.animate === 'open' ||
+        animateContext?.animate === 'closing' ? ( */}
+        <Profile />
+        {/* ) : (
           ''
-        )}
+        )} */}
         <Outlet />
       </SocketContext.Provider>
     </>
