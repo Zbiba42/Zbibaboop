@@ -322,17 +322,19 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
             sx={{
               mt: 1,
               p: 1,
+              px: 2,
               outline: '1px solid grey',
               boxShadow: 1,
               borderRadius: 2,
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
             <h1 className="font-bold text-sm text-[#272838] capitalize text-left ">
               Add to your post
             </h1>
-            <div className="w-5/12 flex justify-end gap-2">
+            <div className="flex justify-end gap-2">
               <Tooltip title="images/videos">
                 <label htmlFor="images-input">
                   <IconButton component="span">
@@ -355,7 +357,7 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
                 </IconButton>
               </Tooltip>
             </div>
-            <Button variant="contained" size="medium" sx={{ marginLeft: 14 }}>
+            <Button variant="contained" size="medium">
               Post
             </Button>
           </Box>
