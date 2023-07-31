@@ -6,6 +6,13 @@ const app = express()
 const cors = require('cors')
 const server = http.createServer(app)
 
+const io = socketIO(server, {
+  cors: {
+    origin: '*',
+  },
+  maxHttpBufferSize: 1e8,
+})
+
 app.use(cors())
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
@@ -19,7 +26,7 @@ const Auth = require('./Routes/Auth')
 const User = require('./Routes/user')
 const Search = require('./Routes/search')
 const Conversation = require('./Routes/conversation')
-const Posts = require('./Routes/post')
+const postRouter = require('./Routes/post')
 
 app.use('/api/auth', Auth)
 
@@ -29,14 +36,7 @@ app.use('/api/user', authToken, User)
 
 app.use('/api/Conversation', authToken, Conversation)
 
-app.use('/api/Posts', authToken, Posts)
-
-const io = socketIO(server, {
-  cors: {
-    origin: '*',
-  },
-  maxHttpBufferSize: 1e8,
-})
+app.use('/api/posts', authToken, postRouter(io))
 
 require('./Sockets/socket')(io)
 
