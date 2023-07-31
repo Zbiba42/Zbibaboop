@@ -1,9 +1,9 @@
 import { Box, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import { ChangeEvent, useState } from 'react'
-import { serverUrl } from '../../../../config'
+import { serverUrl } from '../../../../../config'
 import CloseIcon from '@mui/icons-material/Close'
-import { profile } from '../../ProfileContent'
+import { profile } from '../../../ProfileContent'
 
 interface Props {
   setTagsShown: React.Dispatch<React.SetStateAction<Boolean>>
@@ -105,6 +105,7 @@ export const SearchTags = ({ setTagsShown, setTags, tags }: Props) => {
               onClick={() => {
                 toggleTagSelect(friend)
               }}
+              key={friend._id}
             >
               <img
                 src={serverUrl + friend.ProfilePath}
