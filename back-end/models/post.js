@@ -5,11 +5,13 @@ const PostSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  tags: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: false,
-  },
+  tags: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+    },
+  ],
   content: {
     type: String,
     required: true,
