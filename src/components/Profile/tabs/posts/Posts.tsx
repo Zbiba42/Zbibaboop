@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import { profile } from '../../ProfileContent'
-import { PostForm } from './PostForm'
+import { PostForm } from './postForm/PostForm'
 interface Props {
   profile?: profile
 }
