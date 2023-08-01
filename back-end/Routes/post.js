@@ -1,13 +1,11 @@
 const { uploadPostFiles } = require('../middlewares/multerImages')
-const postController = require('../Controllers/postController')
+const { addPost, getPosts } = require('../Controllers/postController')
 
 const router = require('express').Router()
 
 const postRouter = (io) => {
-  router.post('/create', uploadPostFiles, (req, res) =>
-    postController.addPost(io, req, res)
-  )
-
+  router.post('/create', uploadPostFiles, (req, res) => addPost(io, req, res))
+  router.get('/get', getPosts)
   return router
 }
 
