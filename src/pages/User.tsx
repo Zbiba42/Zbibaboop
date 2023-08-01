@@ -10,6 +10,7 @@ import jwtDecode from 'jwt-decode'
 import { RelationButtons } from '../components/Profile/RelationButtons'
 import { profile } from '../components/Profile/ProfileContent'
 import { Friends } from '../components/Profile/tabs/Friends'
+import { Posts } from '../components/Profile/tabs/posts/Posts'
 
 export const User = () => {
   const socket = useContext(SocketContext)
@@ -65,7 +66,7 @@ export const User = () => {
         checkRelation()
       }
     })
-
+    setValue(0)
     checkRelation()
     getUser()
   }, [id])
@@ -122,7 +123,7 @@ export const User = () => {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Posts
+        <Posts profile={profile} type="user" />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <About profile={profile} />
