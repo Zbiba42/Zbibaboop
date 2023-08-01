@@ -107,7 +107,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Posts profile={profile} />
+          <Posts profile={profile} type="profile" />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <About profile={profile} />
