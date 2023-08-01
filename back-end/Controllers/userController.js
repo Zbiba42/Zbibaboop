@@ -54,7 +54,10 @@ const getUser = async (req, res) => {
 const checkUsersRelation = async (req, res) => {
   const user1 = req.query.user1
   const user2 = req.query.user2
-
+  if (user1 === user2) {
+    res.status(200).json({ succes: true, data: 'same Person' })
+    return
+  }
   const alreadySent = await FriendRequest.exists({
     sender: user1,
     Receiver: user2,
