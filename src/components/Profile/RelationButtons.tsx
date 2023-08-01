@@ -194,6 +194,8 @@ export const RelationButtons = ({
             Send Message
           </Button>
         </>
+      ) : relation === 'same Person' ? (
+        <div className="h-[37px]"></div>
       ) : (
         <Button
           color="inherit"
