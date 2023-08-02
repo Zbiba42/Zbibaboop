@@ -17,7 +17,7 @@ const ReactionSchema = new mongoose.Schema({
     required: false,
   },
   reaction: {
-    type: string,
+    type: String,
     enum: [
       'Love',
       'like',
