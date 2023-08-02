@@ -9,6 +9,12 @@ const ReactionSchema = new mongoose.Schema({
   onPost: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post',
+    required: false,
+  },
+  onComment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment',
+    required: false,
   },
   reaction: {
     type: string,
