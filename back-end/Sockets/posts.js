@@ -195,6 +195,58 @@ const Posts = (io, socket) => {
       io.to(data.id).emit('commentResponse', { succes: false })
     }
   })
+  //////////////////////////////////////////
+  socket.on('commentReaction', async (data) => {
+    try {
+      let reaction = await Reaction.findOne({
+        owner: data.id,
+        onComment: data.commentId,
+      })
+      const comment = await Comment.findOne({ _id: data.commentId })
+      if (!reaction) {
+        reaction = await Reaction.create({
+          owner: data.id,
+          onComment: data.postId,
+          reaction: data.reactionType,
+        })
+        await Comment.updateOne(
+          { _id: data.commentId },
+          { $addToSet: { reactions: reaction } }
+        )
+        const notification = await Notification.create({
+          sender: data.id,
+          receiver: comment.owner,
+          type: 'commentReaction',
+          content: { postId: comment._id },
+        })
+        await User.updateOne(
+          { _id: comment.owner },
+          {
+            $push: {
+              notifications: notification,
+            },
+          }
+        )
+        io.to(comment.owner).emit('notification')
+      }
+      if (reaction.reaction !== data.reactionType) {
+        reaction.reaction = data.reactionType
+        await reaction.save()
+
+        await Comment.updateOne(
+          { _id: data.commentId },
+          { $pull: { reactions: { owner: data.id } } }
+        )
+
+        await Comment.updateOne(
+          { _id: data.commentId },
+          { $addToSet: { reactions: reaction } }
+        )
+      }
+    } catch (error) {
+      io.to(data.id).emit('reactionResponse', { succes: false })
+    }
+  })
 }
 
 module.exports = { Posts }
