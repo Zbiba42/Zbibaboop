@@ -32,6 +32,13 @@ const CommentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  reactions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Reaction',
+      required: false,
+    },
+  ],
   replies: [
     {
       type: mongoose.Schema.Types.ObjectId,
