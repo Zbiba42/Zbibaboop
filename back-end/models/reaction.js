@@ -1,20 +1,27 @@
 const mongoose = require('mongoose')
 
 const ReactionSchema = new mongoose.Schema({
-  sender: {
-    type: mongoose.Types.ObjectId,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
     required: true,
+  },
+  onPost: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
   },
   reaction: {
     type: string,
     enum: [
-      'uwu',
+      'Love',
       'like',
       'love',
-      'hate',
+      'Love',
       'kys',
       'remove some of ur ribs an suck ur cock',
       'femboy',
     ],
   },
 })
+
+module.exports = mongoose.model('Reaction', ReactionSchema)
