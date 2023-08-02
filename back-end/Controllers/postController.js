@@ -51,4 +51,43 @@ const addPost = async (io, req, res) => {
     res.status(400).json({ succes: false, error: error.message })
   }
 }
-module.exports = { addPost, getPosts }
+
+const UpdatePostContent = async (req, res) => {
+  const postId = req.body.postId
+  const newContent = req.body.content
+  try {
+    const post = await Post.updateOne({ _id: postId }, { content: newContent })
+    res.status(200).json({ succes: true, data: post })
+  } catch (error) {
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
+const UpdatePostTags = async (req, res) => {
+  const postId = req.body.postId
+  const newTags = req.body.newTags
+  try {
+    const post = await Post.updateOne({ _id: postId }, { tags: newTags })
+    res.status(200).json({ succes: true, data: post })
+  } catch (error) {
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
+const DeletePost = async (req, res) => {
+  const postId = req.body.postId
+  try {
+    const post = await Post.deleteOne({ _id: postId })
+    res.status(200).json({ succes: true, data: post })
+  } catch (error) {
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
+module.exports = {
+  addPost,
+  getPosts,
+  UpdatePostContent,
+  UpdatePostTags,
+  DeletePost,
+}
