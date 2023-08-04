@@ -6,13 +6,15 @@ const PostSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  tags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: false,
-    },
-  ],
+  tags: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    default: [],
+  },
   content: {
     type: String,
     required: true,
@@ -25,20 +27,26 @@ const PostSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
-      required: false,
-    },
-  ],
-  reactions: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Reaction',
-      required: false,
-    },
-  ],
+  comments: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
+        required: false,
+      },
+    ],
+    default: [],
+  },
+  reactions: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Reaction',
+        required: false,
+      },
+    ],
+    default: [],
+  },
 })
 
 module.exports = mongoose.model('Post', PostSchema)
