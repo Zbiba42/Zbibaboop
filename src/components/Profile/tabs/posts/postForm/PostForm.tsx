@@ -13,9 +13,10 @@ import { PostTagsPreview } from './PostTagsPreview'
 interface Props {
   ProfilePath?: string
   Fullname?: string
+  setRefresh: React.Dispatch<React.SetStateAction<number>>
 }
 
-export const PostForm = ({ ProfilePath, Fullname }: Props) => {
+export const PostForm = ({ ProfilePath, Fullname, setRefresh }: Props) => {
   // animation
   const [isPostFormOpen, setPostFormOpen] = useState<boolean>(false)
   const controls = useAnimation()
@@ -98,6 +99,7 @@ export const PostForm = ({ ProfilePath, Fullname }: Props) => {
         toast.success('post created succesfully !')
         setTags([])
         setPreviews([])
+        setRefresh((old) => old + 1)
         if (PostContentRef.current) {
           PostContentRef.current.value = ''
         }
