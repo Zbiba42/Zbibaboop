@@ -8,31 +8,35 @@ import { serverUrl } from '../../../../config'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { Post } from './post/Post'
 interface Props {
   profile?: profile
   type: string
 }
-interface Post {
+export interface PostInterface {
+  _id: string
   owner: string
-  tags: string[]
+  tags: profile[]
   content: string
-  files: string[]
+  files: {
+    type: string
+    url: string
+  }[]
   timestamp: string
   comments: string[]
   reactions: string[]
 }
 export const Posts = ({ profile, type }: Props) => {
-  const [posts, setPosts] = useState<Post[]>([])
+  const [posts, setPosts] = useState<PostInterface[]>([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
-
+  const [postRefresh, setRefresh] = useState(0)
   const { id } = useParams()
   const [isStranger, setIsStranger] = useState(true)
   const getPosts = async () => {
     const decodedToken = jwtDecode<{ id: string }>(
       sessionStorage.getItem('AccessToken') as string
     )
-    console.log('token :' + decodedToken.id)
     const userId = type === 'profile' ? decodedToken.id : id
     try {
       const { data } = await axios.get(serverUrl + '/api/posts/get', {
@@ -44,6 +48,7 @@ export const Posts = ({ profile, type }: Props) => {
       if (data.data.length === 0) {
         setHasMore(false)
       }
+      console.log(data.data)
       setPosts(data.data)
     } catch (error: any) {
       toast.error(error.message)
@@ -53,7 +58,6 @@ export const Posts = ({ profile, type }: Props) => {
     const decodedToken = jwtDecode<{ id: string }>(
       sessionStorage.getItem('AccessToken') as string
     )
-    console.log('token :' + decodedToken.id)
     const userId = type === 'profile' ? decodedToken.id : id
     try {
       const { data } = await axios.get(serverUrl + '/api/posts/get', {
@@ -66,11 +70,17 @@ export const Posts = ({ profile, type }: Props) => {
         setHasMore(false)
       }
       setPage((old) => old + 1)
-      setPosts(data.data.concat(posts))
+      if (data.data.length !== 0) {
+        setPosts(data.data.concat(posts))
+      }
     } catch (error: any) {
       toast.error(error.message)
     }
   }
+  useEffect(() => {
+    setPage(1)
+    getPosts()
+  }, [postRefresh])
   useEffect(() => {
     getPosts()
     setIsStranger(() => {
@@ -99,31 +109,22 @@ export const Posts = ({ profile, type }: Props) => {
           <>
             <h3 className="text-lg font-medium m-1">New post :</h3>
             <PostForm
+              setRefresh={setRefresh}
               Fullname={profile?.Fullname}
               ProfilePath={profile?.ProfilePath}
             />
           </>
         )}
+
         <InfiniteScroll
           dataLength={posts.length}
           next={() => getNextPage()}
           hasMore={hasMore}
           loader={''}
-          scrollableTarget="messagesContainer"
+          scrollableTarget="ProfileContainer"
         >
-          {posts.map((post: Post) => {
-            return (
-              <div>
-                post1 +{' '}
-                {new Date(post.timestamp).toLocaleString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: 'numeric',
-                  minute: 'numeric',
-                })}
-              </div>
-            )
+          {posts.map((post: PostInterface) => {
+            return <Post post={post} user={profile} key={post._id} />
           })}
         </InfiniteScroll>
       </Box>

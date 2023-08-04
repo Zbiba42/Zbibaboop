@@ -44,6 +44,7 @@ export const Profile = () => {
         initial={{ x: '-100%' }}
         animate={controls as AnimationControls}
         transition={{ type: 'spring', duration: 0.8 }}
+        id="ProfileContainer"
         style={{
           position: 'fixed',
           zIndex: 2,
