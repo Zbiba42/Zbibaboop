@@ -1,6 +1,7 @@
 const Notification = require('../models/notification')
 const Post = require('../models/post')
 const User = require('../models/user')
+require('dotenv').config()
 
 const getPosts = async (req, res) => {
   const id = req.query.id
@@ -8,9 +9,13 @@ const getPosts = async (req, res) => {
   const pageSize = 20
   try {
     const posts = await Post.find({ owner: id })
+      .populate({
+        path: 'tags',
+      })
       .sort({ timestamp: -1 })
       .skip((pageNumber - 1) * pageSize)
       .limit(10)
+
     res.status(200).json({ succes: true, data: posts })
   } catch (error) {
     res.status(400).json({ succes: false, error: error.message })
@@ -18,17 +23,31 @@ const getPosts = async (req, res) => {
 }
 
 const addPost = async (io, req, res) => {
+  const files = req.files
+  const newFiles = []
+
+  if (files && files.length > 0) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const preview = {
+        type: file.mimetype,
+        url: process.env.Serverl_url + '/' + file.path,
+      }
+      newFiles.push(preview)
+    }
+  }
+
   const postObject = {
     owner: req.payload.id,
     tags: req.body.tags,
     content: req.body.content,
-    files: req.files.map((file) => file.path),
+    files: newFiles,
     comments: [],
     reactions: [],
   }
+
   try {
     const post = await Post.create(postObject)
-    console.log(post)
     post.tags.forEach(async (tag) => {
       const notification = await Notification.create({
         sender: post.owner,
