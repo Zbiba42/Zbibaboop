@@ -5,10 +5,10 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import { ListItemIcon } from '@mui/material'
-import { useState } from 'react'
-import { PostFilesPreview } from '../postForm/PostFilesPreview'
-
+import { Button, ListItemIcon, TextField } from '@mui/material'
+import { useRef, useState } from 'react'
+import { PostFilesPrev } from './PostFilesPrev'
+import { toast } from 'react-toastify'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
@@ -16,6 +16,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import ShareIcon from '@mui/icons-material/Share'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied'
+import axios from 'axios'
 
 interface Props {
   post: PostInterface
@@ -37,6 +38,28 @@ export const Post = ({ post, user }: Props) => {
   const handleReactHover = (hover: boolean) => {
     setIsReactHovered(hover)
   }
+
+  const [isEdittingContent, SetEdittingContent] = useState(false)
+  const PostContentRef = useRef<HTMLInputElement>(null)
+  const updateContent = async () => {
+    if (PostContentRef.current) {
+      if (PostContentRef.current.value !== post.content) {
+        try {
+          const data = await axios.post(
+            serverUrl + '/api/posts/updateContent',
+            {
+              postId: post._id,
+              conten: PostContentRef.current.value,
+            }
+          )
+          console.log(data)
+          toast.success('post updated succesfully')
+        } catch (error) {}
+      } else {
+        SetEdittingContent(false)
+      }
+    }
+  }
   return (
     <div className="w-full border min-h-[15rem]  p-2 my-2 rounded-md relative">
       <Menu
@@ -48,7 +71,7 @@ export const Post = ({ post, user }: Props) => {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem>
+        <MenuItem onClick={() => SetEdittingContent(true)}>
           <ListItemIcon>
             <i className="fa-solid fa-pen-to-square"></i>
           </ListItemIcon>
@@ -114,29 +137,69 @@ export const Post = ({ post, user }: Props) => {
         </div>
       </div>
       {/* Content */}
-      <div className="w-full py-2 px-3">
-        {!isExpanded ? post.content.slice(0, 93) : post.content}
-        {!isExpanded && post.content.length > 93 && (
-          <span
-            onClick={() => setIsExpanded(true)}
-            className="show-more-button text-blue-500 cursor-pointer"
-          >
-            {' '}
-            Show more...
-          </span>
-        )}
-        {isExpanded && (
-          <span
-            onClick={() => setIsExpanded(false)}
-            className="show-more-button text-blue-500 cursor-pointer"
-          >
-            {' '}
-            Show less...
-          </span>
-        )}{' '}
-      </div>
+      {isEdittingContent ? (
+        <>
+          <div className="flex gap-1 items-center">
+            <TextField
+              sx={{
+                width: '85%',
+                m: 2,
+              }}
+              inputProps={{
+                style: { width: '100%' },
+              }}
+              multiline
+              maxRows={4}
+              placeholder="Nobody cares abt what ur gonna post"
+              autoComplete="off"
+              variant="standard"
+              defaultValue={post.content}
+              inputRef={PostContentRef}
+            />
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => SetEdittingContent(false)}
+              sx={{ height: '2rem' }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={updateContent}
+              sx={{ height: '2rem' }}
+            >
+              Update
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div className="w-full py-2 px-3">
+          {!isExpanded ? post.content.slice(0, 93) : post.content}
+          {!isExpanded && post.content.length > 93 && (
+            <span
+              onClick={() => setIsExpanded(true)}
+              className="show-more-button text-blue-500 cursor-pointer"
+            >
+              {' '}
+              Show more...
+            </span>
+          )}
+          {isExpanded && (
+            <span
+              onClick={() => setIsExpanded(false)}
+              className="show-more-button text-blue-500 cursor-pointer"
+            >
+              {' '}
+              Show less...
+            </span>
+          )}{' '}
+        </div>
+      )}
+
       {/* Files */}
-      {post.files.length > 0 && <PostFilesPreview previews={post.files} />}
+      {post.files.length > 0 && <PostFilesPrev previews={post.files} />}
       {/* buttons */}
       <div className="grid grid-cols-3 w-full px-5 my-3 relative">
         <div
