@@ -45,15 +45,18 @@ export const Post = ({ post, user }: Props) => {
     if (PostContentRef.current) {
       if (PostContentRef.current.value !== post.content) {
         try {
-          const data = await axios.post(
+          const { data } = await axios.post(
             serverUrl + '/api/posts/updateContent',
             {
               postId: post._id,
-              conten: PostContentRef.current.value,
+              content: PostContentRef.current.value,
             }
           )
-          console.log(data)
-          toast.success('post updated succesfully')
+          if (data.succes) {
+            toast.success('post updated succesfully')
+            post.content = PostContentRef.current.value
+            SetEdittingContent(false)
+          }
         } catch (error) {}
       } else {
         SetEdittingContent(false)
