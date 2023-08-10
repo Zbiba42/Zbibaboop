@@ -82,7 +82,6 @@ export const Posts = ({ profile, type }: Props) => {
     getPosts()
   }, [postRefresh])
   useEffect(() => {
-    getPosts()
     setIsStranger(() => {
       const decodedToken = jwtDecode<{ id: string }>(
         sessionStorage.getItem('AccessToken') as string
