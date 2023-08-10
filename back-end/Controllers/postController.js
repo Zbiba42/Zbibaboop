@@ -9,13 +9,10 @@ const getPosts = async (req, res) => {
   const pageSize = 20
   try {
     const posts = await Post.find({ owner: id })
-      .populate({
-        path: 'tags',
-      })
+      .populate({ path: 'tags', select: 'Fullname' })
       .sort({ timestamp: -1 })
       .skip((pageNumber - 1) * pageSize)
       .limit(10)
-
     res.status(200).json({ succes: true, data: posts })
   } catch (error) {
     res.status(400).json({ succes: false, error: error.message })
