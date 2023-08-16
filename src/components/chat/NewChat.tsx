@@ -10,7 +10,7 @@ export const NewChat = () => {
   return (
     <SpeedDial
       ariaLabel="SpeedDial openIcon example"
-      sx={{ position: 'absolute', bottom: 20, right: 20 }}
+      sx={{ position: 'fixed', bottom: 20, right: 20 }}
       icon={<SpeedDialIcon />}
     >
       <SpeedDialAction
