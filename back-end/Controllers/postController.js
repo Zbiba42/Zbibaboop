@@ -1,3 +1,4 @@
+const Comment = require('../models/comment')
 const Notification = require('../models/notification')
 const Post = require('../models/post')
 const User = require('../models/user')
@@ -6,14 +7,26 @@ require('dotenv').config()
 const getPosts = async (req, res) => {
   const id = req.query.id
   const pageNumber = req.query.page
-  const pageSize = 20
+  const pageSize = 5
   try {
     const posts = await Post.find({ owner: id })
-      .populate({ path: 'tags', select: 'Fullname' })
+      .populate({ path: 'tags owner', select: 'Fullname' })
       .sort({ timestamp: -1 })
       .skip((pageNumber - 1) * pageSize)
-      .limit(10)
+      .limit(pageSize)
     res.status(200).json({ succes: true, data: posts })
+  } catch (error) {
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
+const getPost = async (req, res) => {
+  const id = req.query.id
+  try {
+    const post = await Post.findOne({ _id: id }).populate({
+      path: 'tags owner',
+    })
+    res.status(200).json({ succes: true, data: post })
   } catch (error) {
     res.status(400).json({ succes: false, error: error.message })
   }
@@ -100,10 +113,28 @@ const DeletePost = async (req, res) => {
   }
 }
 
+const getPostComments = async (req, res) => {
+  const postId = req.query.postId
+  const pageNumber = req.query.page
+  const pageSize = 5
+  try {
+    const comments = await Comment.find({ onPost: postId })
+      .populate({ path: 'owner', select: 'Fullname ProfilePath' })
+      .sort({ timestamp: -1 })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+    res.status(200).json({ succes: true, data: comments })
+  } catch (error) {
+    res.status(400).json({ succes: false, error: error.message })
+  }
+}
+
 module.exports = {
   addPost,
+  getPost,
   getPosts,
   UpdatePostContent,
   UpdatePostTags,
   DeletePost,
+  getPostComments,
 }
