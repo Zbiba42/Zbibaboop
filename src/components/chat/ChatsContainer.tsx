@@ -32,7 +32,7 @@ export const ChatContainer = () => {
       sx={{
         height: '65%',
         paddingRight: '100px',
-        position: 'absolute',
+        position: 'fixed',
         zIndex: 99,
         bottom: 0,
         right: 0,
