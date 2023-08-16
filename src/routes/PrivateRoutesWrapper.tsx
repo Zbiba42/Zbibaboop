@@ -3,8 +3,7 @@ import jwtDecode from 'jwt-decode'
 import { NavBar } from '../components/navBar/NavBar'
 import { SideBar } from '../components/SideBar'
 import { Profile } from '../pages/Profile'
-import { useContext, useEffect, useState } from 'react'
-import { HandleProfileClickContext } from '../routes/AppRoutes'
+import { useEffect, useState } from 'react'
 import { SearchInput } from '../components/search/SearchInput'
 import { Socket, io } from 'socket.io-client'
 import { createContext } from 'react'
@@ -25,8 +24,6 @@ export const PrivateRoutesWrapper = () => {
     const currentTime = Date.now() / 1000
     return decodedToken.exp < currentTime
   }
-
-  const animateContext = useContext(HandleProfileClickContext)
 
   useEffect(() => {
     const accessToken = sessionStorage.getItem('AccessToken')
@@ -57,9 +54,6 @@ export const PrivateRoutesWrapper = () => {
         {/* {animateContext?.animate === 'open' ||
         animateContext?.animate === 'closing' ? ( */}
         <Profile />
-        {/* ) : (
-          ''
-        )} */}
         <Outlet />
       </SocketContext.Provider>
     </>
