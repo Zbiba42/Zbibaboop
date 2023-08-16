@@ -27,7 +27,7 @@ const User = require('./Routes/user')
 const Search = require('./Routes/search')
 const Conversation = require('./Routes/conversation')
 const postRouter = require('./Routes/post')
-
+const homePageRouter = require('./Routes/homePage')
 app.use('/api/auth', Auth)
 
 app.use('/api/search', authToken, Search)
@@ -37,6 +37,8 @@ app.use('/api/user', authToken, User)
 app.use('/api/Conversation', authToken, Conversation)
 
 app.use('/api/posts', authToken, postRouter(io))
+
+app.use('/api/home', authToken, homePageRouter)
 
 require('./Sockets/socket')(io)
 
