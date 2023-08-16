@@ -29,7 +29,12 @@ export const Notifications = ({
       sender: String
       receiver: String
       type: String
-      content: { sender: String; Receiver: String; status: String }
+      content: {
+        sender: String
+        Receiver: String
+        status: String
+        postId: String
+      }
       status: String
     }>
   >([])
