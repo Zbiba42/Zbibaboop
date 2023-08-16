@@ -120,14 +120,7 @@ const removeFriend = async (req, res) => {
 const getNotifications = async (req, res) => {
   const id = req.query.id
   try {
-    const { notifications } = await User.findOne(
-      { _id: id },
-      {
-        notifications: 1,
-      }
-    ).populate({
-      path: 'notifications',
-    })
+    const notifications = await Notification.find({ receiver: id })
     res.status(200).json({ succes: true, data: notifications })
   } catch (error) {
     res.status(400).json({ succes: false, data: error })
