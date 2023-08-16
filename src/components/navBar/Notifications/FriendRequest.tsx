@@ -14,6 +14,7 @@ interface Props {
       sender: String
       Receiver: String
       status: String
+      postId: String
     }
     status: String
   }
