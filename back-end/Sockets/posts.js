@@ -62,65 +62,29 @@ const Posts = (io, socket) => {
       owner: data.id,
       onPost: data.postId,
       content: data.content,
-      files: [],
-    }
-
-    if (data.files) {
-      const filePath = `./uploads/${data.id}`
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-
-      for (const file of data.files) {
-        const extension = file.fileName.split('.').pop()
-        const fileName = `file-${uniqueSuffix}.${extension}`
-        const fileDestination = path.join(filePath, fileName)
-
-        try {
-          const fileData = Buffer.from(file.file)
-          if (!fs.existsSync(filePath)) {
-            fs.mkdirSync(filePath, { recursive: true })
-          }
-          fs.writeFile(
-            fileDestination,
-            fileData,
-            {
-              encoding: 'binary',
-            },
-            (err) => {
-              if (err) {
-                io.to(data.id).emit('commentResponse', {
-                  succes: false,
-                })
-                return
-              }
-            }
-          )
-          commentObj.files.push(fileDestination)
-        } catch (error) {
-          io.to(data.id).emit('commentResponse', { succes: false })
-        }
-      }
     }
     try {
       const comment = await Comment.create(commentObj)
       const post = await Post.findOne({ _id: data.postId })
       post.comments.push(comment)
       await post.save()
-
-      const notification = await Notification.create({
-        sender: data.id,
-        receiver: post.owner,
-        type: 'postComment',
-        content: { postId: post._id },
-      })
-      await User.updateOne(
-        { _id: post.owner },
-        {
-          $push: {
-            notifications: notification,
-          },
-        }
-      )
-      io.to(post.owner).emit('notification')
+      if (data.id !== post.owner) {
+        const notification = await Notification.create({
+          sender: data.id,
+          receiver: post.owner,
+          type: 'postComment',
+          content: { postId: post._id },
+        })
+        await User.updateOne(
+          { _id: post.owner },
+          {
+            $push: {
+              notifications: notification,
+            },
+          }
+        )
+        io.to(notification.receiver).emit('notification')
+      }
     } catch (error) {
       io.to(data.id).emit('commentResponse', { succes: false })
     }
