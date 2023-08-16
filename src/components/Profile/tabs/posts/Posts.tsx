@@ -2,20 +2,20 @@ import { Box } from '@mui/material'
 import { profile } from '../../ProfileContent'
 import { PostForm } from './postForm/PostForm'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
 import { serverUrl } from '../../../../config'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Post } from './post/Post'
+import { useParams } from 'react-router-dom'
 interface Props {
   profile?: profile
   type: string
 }
 export interface PostInterface {
   _id: string
-  owner: string
+  owner: profile
   tags: profile[]
   content: string
   files: {
@@ -23,7 +23,13 @@ export interface PostInterface {
     url: string
   }[]
   timestamp: string
-  comments: string[]
+  comments: {
+    id: string
+    owner: string
+    onPost: string
+    content: string
+    timestamp: string
+  }[]
   reactions: string[]
 }
 export const Posts = ({ profile, type }: Props) => {
@@ -48,7 +54,6 @@ export const Posts = ({ profile, type }: Props) => {
       if (data.data.length === 0) {
         setHasMore(false)
       }
-      console.log(data.data)
       setPosts(data.data)
     } catch (error: any) {
       toast.error(error.message)
@@ -123,7 +128,14 @@ export const Posts = ({ profile, type }: Props) => {
           scrollableTarget="ProfileContainer"
         >
           {posts.map((post: PostInterface) => {
-            return <Post post={post} user={profile} key={post._id} />
+            return (
+              <Post
+                setRefresh={setRefresh}
+                post={post}
+                user={profile}
+                key={post._id}
+              />
+            )
           })}
         </InfiniteScroll>
       </Box>
