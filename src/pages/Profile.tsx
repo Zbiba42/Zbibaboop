@@ -35,7 +35,7 @@ export const Profile = () => {
         position: 'fixed',
         width: '100%',
         height: '100%',
-        zIndex: animateContext?.animate === 'open' ? 1 : 0,
+        zIndex: animateContext?.animate === 'open' ? 99 : -99,
       }}
       ref={containerRef}
       onMouseDown={handleClickOutside}
