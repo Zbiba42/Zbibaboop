@@ -5,6 +5,7 @@ import { Home } from '../pages/Home'
 import { Login } from '../pages/Login'
 import { Search } from '../pages/Search'
 import { User } from '../pages/User'
+import { PostPage } from '../pages/PostPage'
 
 interface HandleProfileClickContextType {
   setAnimate: React.Dispatch<React.SetStateAction<string>>
@@ -26,6 +27,7 @@ export const AppRoutes = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/user/:id" element={<User />} />
+            <Route path="/post/:id" element={<PostPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
