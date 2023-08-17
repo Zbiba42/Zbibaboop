@@ -50,7 +50,11 @@ export const PrivateRoutesWrapper = () => {
         <SideBar />
         <NavBar />
         <ChatContainer />
-        {location.pathname === '/search' || '/user' ? '' : <SearchInput />}
+        {location.pathname === '/search' || location.pathname === '/user' ? (
+          ''
+        ) : (
+          <SearchInput />
+        )}
         {/* {animateContext?.animate === 'open' ||
         animateContext?.animate === 'closing' ? ( */}
         <Profile />
