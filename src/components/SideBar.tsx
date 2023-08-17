@@ -10,8 +10,6 @@ export const SideBar = () => {
   }
   const Buttons: Button[] = [
     { name: 'search', icon: 'fa-solid fa-magnifying-glass', link: '/search' },
-    { name: 'search2', icon: 'fa-solid fa-magnifying-glass', link: '/search' },
-    { name: 'search3', icon: 'fa-solid fa-magnifying-glass', link: '/search' },
   ]
   return (
     <Box sx={SideBarBox}>
