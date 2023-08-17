@@ -6,10 +6,8 @@ interface props {
 }
 export const SearchFilters = ({ filter, setFilter }: props) => {
   const filters = [
-    { name: 'All', icon: 'fa-regular fa-newspaper' },
     { name: 'People', icon: 'fa-solid fa-user-group' },
     { name: 'Posts', icon: 'fa-regular fa-newspaper' },
-    { name: 'placeHolder', icon: 'fa-regular fa-newspaper' },
   ]
   return (
     <div className="fixed top-0 h-[100vh] text-start w-64 bg-[#f9f9f9] pt-2 border-r">
