@@ -76,7 +76,7 @@ export const Posts = ({ profile, type }: Props) => {
       }
       setPage((old) => old + 1)
       if (data.data.length !== 0) {
-        setPosts(data.data.concat(posts))
+        setPosts(posts.concat(data.data))
       }
     } catch (error: any) {
       toast.error(error.message)

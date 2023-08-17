@@ -49,7 +49,7 @@ export const Comments = ({ post }: { post: PostInterface }) => {
     if (data.data.length === 0) {
       setHasMore(false)
     } else {
-      setComments(data.data.concat(comments))
+      setComments(comments.concat(data.data))
     }
   }
   const handleSubmit = () => {

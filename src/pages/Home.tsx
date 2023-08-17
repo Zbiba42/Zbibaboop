@@ -33,7 +33,7 @@ export const Home = () => {
       setHasMore(false)
     }
     if (data.data.length !== 0) {
-      setPosts(data.data.concat(posts))
+      setPosts(posts.concat(data.data))
     }
   }
   useEffect(() => {
