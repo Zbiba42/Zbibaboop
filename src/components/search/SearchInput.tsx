@@ -17,9 +17,7 @@ export const SearchInput = () => {
         onKeyDown={(e: any) => {
           e.key == 'Enter' && e.target.value.trim() != ''
             ? navigate(
-                `/search?filter=all&search=${encodeURIComponent(
-                  e.target.value.trim()
-                )}`
+                `/search?&search=${encodeURIComponent(e.target.value.trim())}`
               )
             : ''
         }}
