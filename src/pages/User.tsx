@@ -77,11 +77,14 @@ export const User = () => {
         width: '65%',
         display: 'flex',
         margin: '0 auto',
+        overflow: ' scroll',
+        height: '100vh',
         flexDirection: 'column',
         position: 'relative',
         zIndex: 0,
         backgroundColor: 'white',
       }}
+      id="ProfileContainer"
     >
       <Box sx={{ marginBottom: '0.5rem', boxShadow: 1 }}>
         <img
