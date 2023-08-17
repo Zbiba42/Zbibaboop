@@ -1,32 +1,57 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SearchFilters } from '../components/search/SearchFilters'
-import { useLocation } from 'react-router-dom'
 import TextField from '@mui/material/TextField/TextField'
 import axios from 'axios'
 import { serverUrl } from '../config'
 import { SearchResults } from '../components/search/SearchResults'
 import { profile } from '../components/Profile/ProfileContent'
+import { PostInterface } from '../components/Profile/tabs/posts/Posts'
+import { toast } from 'react-toastify'
 
 export const Search = () => {
-  const location = useLocation()
-  const [filter, setFilter] = useState<string>('All')
-  const [results, setResults] = useState<Array<profile>>([])
-  const handleSearch = async (_filter: string, search: string) => {
+  const [filter, setFilter] = useState<string>('People')
+  const [page, setPage] = useState(1)
+  const [results, setResults] = useState<Array<profile | PostInterface>>([])
+  const [hasMore, setHasMore] = useState(true)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const handleSearch = async () => {
     try {
       const { data } = await axios.get(
-        serverUrl + `/api/search/?search=${search}&page=1`
+        serverUrl +
+          `/api/search/?search=${inputRef.current?.value}&page=${page}&filter=${filter}`
       )
-      setResults(data.data)
-    } catch (error) {}
+      if (data.data.length === 0) {
+        setHasMore(false)
+      } else {
+        setResults(data.data)
+      }
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+  const getNextPage = async () => {
+    try {
+      const { data } = await axios.get(
+        serverUrl +
+          `/api/search/?search=${inputRef.current?.value}&page=${
+            page + 1
+          }&filter=${filter}`
+      )
+      setPage((old) => old + 1)
+      if (data.data.length === 0) {
+        setHasMore(false)
+      } else {
+        setResults(results.concat(data.data))
+      }
+    } catch (error: any) {
+      toast.error(error.message)
+    }
   }
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const query = searchParams.get('search') as string
-    const filter = searchParams.get('filter') as string
-    if (filter != '' && query != '') {
-      handleSearch(filter, query)
-    }
-  }, [])
+    setPage(1)
+    setResults([])
+  }, [filter])
+
   return (
     <>
       <div
@@ -47,16 +72,22 @@ export const Search = () => {
               left: '25rem',
               backgroundColor: 'white',
             }}
+            inputRef={inputRef}
             onKeyDown={(e: any) => {
               e.key == 'Enter' && e.target.value.trim() != ''
-                ? handleSearch(filter, e.target.value.trim())
+                ? handleSearch()
                 : ''
             }}
             autoComplete="off"
           />
         </div>
         <SearchFilters filter={filter} setFilter={setFilter} />
-        <SearchResults results={results} />
+        <SearchResults
+          results={results}
+          filter={filter}
+          hasMore={hasMore}
+          getNextPage={getNextPage}
+        />
       </div>
     </>
   )
