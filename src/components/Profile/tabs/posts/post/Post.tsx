@@ -40,6 +40,7 @@ export const Post = ({ post, user, setRefresh }: Props) => {
   const [isSamePerson, setIsSamePerson] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [reaction, setReaction] = useState('like')
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -310,9 +311,21 @@ export const Post = ({ post, user, setRefresh }: Props) => {
           className="flex flex-row justify-center items-center w-full space-x-3"
           onMouseEnter={() => handleReactHover(true)}
         >
-          <ThumbUpIcon
-            sx={{ color: isReactHovered ? 'primary.main' : '#838383' }}
-          />
+          {reaction == 'like' && (
+            <ThumbUpIcon
+              sx={{ color: isReactHovered ? 'primary.main' : '#838383' }}
+            />
+          )}
+          {reaction == 'love' && (
+            <FavoriteIcon
+              sx={{ color: isReactHovered ? 'primary.main' : '#838383' }}
+            />
+          )}
+          {reaction == 'smile' && (
+            <SentimentSatisfiedIcon
+              sx={{ color: isReactHovered ? 'primary.main' : '#838383' }}
+            />
+          )}
           <span className="font-semibold text-lg text-gray-600">React</span>
           {isReactHovered && (
             <Box
@@ -337,13 +350,24 @@ export const Post = ({ post, user, setRefresh }: Props) => {
                   size="large"
                   color="primary"
                   aria-label={'Thumbs Up'}
+                  onClick={() => setReaction('like')}
                 >
                   <ThumbUpIcon />
                 </IconButton>
-                <IconButton size="large" color="primary" aria-label={'Like'}>
+                <IconButton
+                  size="large"
+                  color="primary"
+                  aria-label={'love'}
+                  onClick={() => setReaction('love')}
+                >
                   <FavoriteIcon />
                 </IconButton>
-                <IconButton size="large" color="primary" aria-label={'Love'}>
+                <IconButton
+                  size="large"
+                  color="primary"
+                  aria-label={'smile'}
+                  onClick={() => setReaction('smile')}
+                >
                   <SentimentSatisfiedIcon />
                 </IconButton>
               </Stack>
