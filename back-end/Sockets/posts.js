@@ -65,10 +65,11 @@ const Posts = (io, socket) => {
     }
     try {
       const comment = await Comment.create(commentObj)
-      const post = await Post.findOne({ _id: data.postId }).populate('owner')
+      const post = await Post.findOne({ _id: data.postId })
       post.comments.push(comment)
       await post.save()
-      if (data.id != post.owner._id) {
+
+      if (data.id != post.owner.toString()) {
         const notification = await Notification.create({
           sender: data.id,
           receiver: post.owner,
@@ -83,7 +84,8 @@ const Posts = (io, socket) => {
             },
           }
         )
-        io.to(notification.receiver).emit('notification')
+
+        io.to(post.owner.toString()).emit('notification')
       }
     } catch (error) {
       io.to(data.id).emit('commentResponse', { succes: false })
