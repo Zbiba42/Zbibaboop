@@ -48,10 +48,20 @@ export const Search = () => {
     }
   }
   useEffect(() => {
-    setPage(1)
     setResults([])
+    setHasMore(true)
+    setPage(1)
   }, [filter])
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search)
+    const query = searchParams.get('search') as string
 
+    if (query != null && inputRef.current) {
+      console.log(query)
+      inputRef.current.value = query
+      handleSearch()
+    }
+  }, [])
   return (
     <>
       <div
@@ -81,13 +91,21 @@ export const Search = () => {
             autoComplete="off"
           />
         </div>
-        <SearchFilters filter={filter} setFilter={setFilter} />
-        <SearchResults
-          results={results}
+        <SearchFilters
           filter={filter}
-          hasMore={hasMore}
-          getNextPage={getNextPage}
+          setFilter={setFilter}
+          setResults={setResults}
+          setHasMore={setHasMore}
+          setPage={setPage}
         />
+        {results.length > 0 && (
+          <SearchResults
+            results={results}
+            filter={filter}
+            hasMore={hasMore}
+            getNextPage={getNextPage}
+          />
+        )}
       </div>
     </>
   )

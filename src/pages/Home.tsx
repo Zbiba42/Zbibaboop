@@ -41,23 +41,27 @@ export const Home = () => {
   }, [])
   return (
     <div className=" text-center pt-[100px] px-80">
-      <InfiniteScroll
-        dataLength={posts.length}
-        next={() => getNextPage()}
-        hasMore={hasMore}
-        loader={''}
-      >
-        {posts.map((post: PostInterface) => {
-          return (
-            <Post
-              setRefresh={setRefresh}
-              post={post}
-              user={post.owner}
-              key={post._id}
-            />
-          )
-        })}
-      </InfiniteScroll>
+      {posts.length > 0 ? (
+        <InfiniteScroll
+          dataLength={posts.length}
+          next={() => getNextPage()}
+          hasMore={hasMore}
+          loader={''}
+        >
+          {posts.map((post: PostInterface) => {
+            return (
+              <Post
+                setRefresh={setRefresh}
+                post={post}
+                user={post.owner}
+                key={post._id}
+              />
+            )
+          })}
+        </InfiniteScroll>
+      ) : (
+        <h4>add some friends to see posts</h4>
+      )}
     </div>
   )
 }

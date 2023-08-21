@@ -57,7 +57,7 @@ export const ProfileContent = ({ setAnimate }: Props) => {
   }
   useEffect(() => {
     getUser()
-  }, [isEditing])
+  }, [isEditing, value])
   if (!isEditing) {
     return (
       <>

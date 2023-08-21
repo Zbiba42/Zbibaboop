@@ -36,12 +36,14 @@ export const SearchResults = ({
         loader={''}
       >
         {filter === 'People' &&
+          results.length > 0 &&
           results.map((user) => {
             if (user._id != decodedToken.id) {
               return <Profilemin user={user as profile} />
             }
           })}
         {filter === 'Posts' &&
+          results.length > 0 &&
           results.map((item: PostInterface | profile) => {
             const post = item as PostInterface
             console.log(post)
