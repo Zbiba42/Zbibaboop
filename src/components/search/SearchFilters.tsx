@@ -1,10 +1,21 @@
 import { Typography } from '@mui/material'
 import FeedIcon from '@mui/icons-material/Feed'
+import { profile } from '../Profile/ProfileContent'
+import { PostInterface } from '../Profile/tabs/posts/Posts'
 interface props {
   filter: string
   setFilter: React.Dispatch<React.SetStateAction<string>>
+  setResults: React.Dispatch<React.SetStateAction<(profile | PostInterface)[]>>
+  setHasMore: React.Dispatch<React.SetStateAction<boolean>>
+  setPage: React.Dispatch<React.SetStateAction<number>>
 }
-export const SearchFilters = ({ filter, setFilter }: props) => {
+export const SearchFilters = ({
+  filter,
+  setFilter,
+  setResults,
+  setHasMore,
+  setPage,
+}: props) => {
   const filters = [
     { name: 'People', icon: 'fa-solid fa-user-group' },
     { name: 'Posts', icon: 'fa-regular fa-newspaper' },
@@ -41,7 +52,12 @@ export const SearchFilters = ({ filter, setFilter }: props) => {
                   ? 'bg-[#e5e5dc] w-[100%] h-10 border flex items-center mb-1 rounded-md p-2 hover:bg-[#e5e5dc] cursor-pointer'
                   : 'w-[100%] h-10 border flex items-center mb-1 rounded-md p-2 hover:bg-[#e5e5dc] cursor-pointer'
               }
-              onClick={() => setFilter(link.name)}
+              onClick={() => {
+                setFilter(link.name)
+                setResults([])
+                setHasMore(true)
+                setPage(1)
+              }}
             >
               <div className="bg-[#e5e5dc] rounded-full w-[30px] h-[30px] flex justify-center items-center">
                 {link.name == 'Posts' ? (

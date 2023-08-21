@@ -48,11 +48,6 @@ export const Search = () => {
     }
   }
   useEffect(() => {
-    setResults([])
-    setHasMore(true)
-    setPage(1)
-  }, [filter])
-  useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
     const query = searchParams.get('search') as string
 
